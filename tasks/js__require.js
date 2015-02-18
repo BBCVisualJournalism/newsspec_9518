@@ -6,7 +6,10 @@ module.exports = function (grunt) {
     // *************************************************************************
 
     var amdModulePaths = {
-        'pubsub': './lib/vendors/jquery/pubsub'
+        'pubsub': './lib/vendors/jquery/pubsub',
+        'backbone': './lib/vendors/backbone/backbone',
+        'underscore': './lib/vendors/backbone/underscore',
+        'd3': 'empty:'
     };
 
     // *************************************************************************

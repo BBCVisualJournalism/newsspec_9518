@@ -44,7 +44,7 @@
                 iframeWatcher = this,
                 hostId        = this.getWindowLocationOrigin(),
                 urlParams     = window.location.hash || '',
-                hostUrl       = window.location.href.replace(urlParams, ''),
+                hostUrl       = encodeURI(window.location.href.replace(urlParams, '')),
                 onBBC         = this.onBbcDomain();
             
             this.staticHeight = link.getAttribute('data-static-iframe-height');

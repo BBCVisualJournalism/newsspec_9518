@@ -57,6 +57,8 @@ if (scaffoldLite) {
                 config.paths.app    = './app';
                 moduleToStartApp    = '<%= pathStatic %>/<%= vocab_dir %>/js/app.js';
             }
+            config.paths = config.paths || {};
+            config.paths.d3 = 'lib/vendors/d3/d3.min';
             return {
                 requireConfig: config,
                 moduleToStartApp: moduleToStartApp

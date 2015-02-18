@@ -10,6 +10,23 @@ module.exports = function (grunt) {
             dest:   'content/<%= config.services.default %>/js/lib/vendors/require/'
         }]
     });
+
+    grunt.config(['copy', 'd3'], {
+        files: [{
+            expand: true,
+            cwd:    'source/js/lib/vendors/d3/',
+            src:    ['**'],
+            dest:   'content/<%= config.services.default %>/js/lib/vendors/d3/'
+        }]
+    });
+    grunt.config(['copy', 'maps'], {
+        files: [{
+            expand: true,
+            cwd:    'source/js/maps/',
+            src:    ['**'],
+            dest:   'content/<%= config.services.default %>/maps/'
+        }]
+    });
     
     grunt.config(['copy', 'jsAll'], {
         files: [{
@@ -46,7 +63,7 @@ module.exports = function (grunt) {
     }
 
     grunt.config(['concurrent', 'js'], {
-        tasks: ['jshint', 'jasmine'].concat(applicationJS)
+        tasks: ['jshint'].concat(applicationJS)
     });
-    grunt.registerTask('js', ['clean:allJs', 'overrideImagerImageSizes', 'requirejs:lite', 'concurrent:js', 'copyRequiredJs']);
+    grunt.registerTask('js', ['clean:allJs', 'overrideImagerImageSizes', 'requirejs:lite', 'copy:d3', 'copy:maps', 'concurrent:js', 'copyRequiredJs']);
 };

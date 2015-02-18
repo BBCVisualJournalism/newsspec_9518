@@ -1,2 +1,16 @@
 @import "news_special/defaults";
 @import "app";
+
+.election-map-svg{
+	width: 750px;
+	height: 750px;
+	display: block;
+	border: 1px solid black;
+	overflow: visible;
+}
+.election-path{
+	fill: #000;
+    fill-opacity: .5;
+}.election-path:hover{
+	fill: red;
+}
