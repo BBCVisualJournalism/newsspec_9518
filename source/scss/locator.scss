@@ -1,0 +1,31 @@
+.locator-map--container{
+	float: right;
+	box-sizing: initial;
+	display: inline-block;
+	position: relative;
+	width: 20%;
+	padding-bottom: 20%;
+	top: 0;
+	right: 0;
+	overflow: hidden;
+	background-color: white;
+	border: 2px solid #000;
+
+	.locator-map--svg{
+		display: inline-block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		
+		.constituency-path{
+			fill-opacity: 1;
+			fill: green;
+		}
+
+		.locator-box {
+			fill: transparent;
+			stroke: #333;
+			stroke-width: 2px;
+		}
+	}
+}

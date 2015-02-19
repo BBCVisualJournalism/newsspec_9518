@@ -11,8 +11,8 @@ define(['lib/news_special/bootstrap', 'd3', 'lib/vendors/d3/topojson', 'lib/vend
 
         ukMap: function () {
             this.loadMap({
-                'translate': [150, 700],
-                'scale': 800,
+                'translate': [150, 745],
+                'scale': 930,
                 'locator': true
             });
         },

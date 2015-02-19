@@ -5,11 +5,14 @@ define([
     'views/locator',
 ], function (news, Backbone, d3, LocatorView) {
     return Backbone.View.extend({
-        className: 'map-container',
+        className: 'main-map--container',
         initialize: function (options) {
             this.mapModel = options.mapModel;
             this.features = this.mapModel.get('topoJson');
             this.d3El = d3.select(this.el);
+
+            this.width = 750;
+            this.height = 750;
 
             this.projection = d3.geo.mercator()
                 .scale(this.mapModel.get('scale'))
@@ -20,28 +23,20 @@ define([
 
             this.svg = d3.select(this.el)
                 .append('svg')
-                .attr('class', 'election-map-svg');
+                .attr('class', 'main-map--svg')
+                .attr('preserveAspectRatio', 'xMinYMin meet')
+                .attr('viewBox', '0 0 ' + this.width + ' ' + this.height);
 
             this.group = this.svg.append('g');
 
             this.scale = 1;
-
-            _.defer(this.setDimensions.bind(this));
-        },
-        setDimensions: function () {
-            this.width = 750;
-            this.height = 750;
-
-            d3.select('.election-map-svg')
-                .attr('width', this.width)
-                .attr('height', this.height);
         },
         render: function () {
             this.group
                 .selectAll('path')
                 .data(this.features)
                 .enter().append('path')
-                .attr('class', 'election-path')
+                .attr('class', 'constituency-path')
                 .attr('data-gssid', this.getDataGssIdFrom)
                 .attr('d', this.path)
                 .on("click", this.handleConstituencyClick.bind(this));
@@ -53,7 +48,7 @@ define([
             return this.$el;
         },
         handleConstituencyClick: function (d){
-            this.centroid = this.path.centroid(d);
+            var centroid = this.path.centroid(d);
             var bounds = this.path.bounds(d);
 
             var xDiff =  bounds[1][0] - bounds[0][0];
@@ -63,13 +58,16 @@ define([
 
             var transform;
 
-            if (scaleDiff !== this.scale) {
-                this.translation = [((this.width /2) - (this.centroid [0] * scaleDiff)), ((this.height /2) - (this.centroid [1] * scaleDiff))];
+            if (scaleDiff !== this.scale || centroid !== centroid) {
+                this.centroid = centroid;
                 this.scale = scaleDiff;
+
+                this.translation = [((this.width /2) - (this.centroid [0] * scaleDiff)), ((this.height /2) - (this.centroid [1] * scaleDiff))];
             } else {
-                this.translation = [0, 0];
                 this.centroid = [(this.width / 2), (this.height / 2)]
                 this.scale = 1;
+
+                this.translation = [0, 0];
             }
 
             this.emitZoomBoundingBox();
@@ -94,7 +92,7 @@ define([
                 right: this.centroid[0] + (this.width / this.scale / 2),
                 bottom: this.centroid[1] + (this.height / this.scale / 2)
             }
-            news.pubsub.emit('map:zoom-box', zoomBox);
+            news.pubsub.emit('map:zoom-box', [zoomBox, this.scale]);
         }
     });
 });
