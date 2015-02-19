@@ -14,3 +14,31 @@
 }.election-path:hover{
 	fill: red;
 }
+
+.map-locator{
+	width: 150px;
+	height: 150px;
+	position: absolute;
+	border: 1px solid black;
+	top: 0;
+	right: 0;
+
+	.election-path{
+		fill-opacity: 1;
+		fill: green;
+	}
+
+	background-color: white;
+}
+.map-container{
+	margin: auto;
+	width: 750px;
+	height: 750px;
+	position: relative;
+}
+
+.locator {
+  fill: transparent;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
