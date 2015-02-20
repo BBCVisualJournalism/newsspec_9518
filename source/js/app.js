@@ -11,8 +11,8 @@ define(['lib/news_special/bootstrap', 'd3', 'lib/vendors/d3/topojson', 'lib/vend
 
         ukMap: function () {
             this.loadMap({
-                'translate': [150, 745],
-                'scale': 930,
+                'translate': [75, 372],
+                'scale': 465,
                 'locator': true
             });
         },
@@ -29,8 +29,7 @@ define(['lib/news_special/bootstrap', 'd3', 'lib/vendors/d3/topojson', 'lib/vend
                 .defer(d3.json, 'maps/uk.json')
                 .await(function (error, mapTopoJson) {
                     if (!error) {
-                        var preSimplified = Topojson.presimplify(mapTopoJson),
-                        features = Topojson.feature(preSimplified, preSimplified.objects['boundaries']).features;
+                        var features = Topojson.feature(mapTopoJson, mapTopoJson.objects['boundaries']).features;
                         config.topoJson = features;
                         // config.topoJson = _.filter(features, function (feature) {
                         //     return feature.properties.PCON12CD.match(/^W/)? true : false;

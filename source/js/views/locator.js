@@ -10,8 +10,8 @@ define([
             this.features = this.mapModel.get('topoJson');
             this.d3El = d3.select(this.el);
 
-            this.width = 150;
-            this.height = 150;
+            this.width = 75;
+            this.height = 75;
 
             this.initMap();
 
@@ -19,23 +19,16 @@ define([
             news.pubsub.on('map:zoom-box', this.zoomBoxUpdate.bind(this));
         },
         initMap: function () {
-            var _this = this;
             var translate = this.mapModel.get('translate');
             translate[0] *= 0.2;
             translate[1] *= 0.2;
 
-            var projection = d3.geo.mercator()
+            this.projection = d3.geo.mercator()
                 .scale(this.mapModel.get('scale') * 0.2)
                 .translate(translate);
 
-            var simplify = d3.geo.transform({
-              point: function(x, y, z) {
-                if (z >= 0.5) this.stream.point(projection([x, y]));
-              }
-            });
-
             this.path = d3.geo.path()
-                .projection(simplify);
+                .projection(this.projection);
 
             this.svg = d3.select(this.el)
                 .append('svg')
@@ -57,8 +50,6 @@ define([
                 .attr('class', 'constituency-path')
                 .attr('d', this.path);
 
-            this.$el.show();
-
             return this.$el;
         },
         addLocatorBox: function () {
@@ -74,6 +65,8 @@ define([
                 });
         },
         zoomBoxUpdate: function (zoomBox, scale) {
+            var _this = this;
+
             var x =(zoomBox.left / 5) , 
                 y = (zoomBox.top / 5),
                 width = (zoomBox.right / 5) - x,
@@ -87,28 +80,25 @@ define([
                 height = 14;
             }
 
-            var boxDisplay = (scale !== 1)? 'block' : 'none';
-
             var locatorEl = this.svg.select('.locator-box');
-            locatorEl.attr({
-                    'display': 'block'
-                });
-            locatorEl
-                .transition()
-                    .attr({
-                        'x' : x,
-                        'y' : y,
-                        'width' : width,
-                        'height' : height,
-                    })
-                    .duration(1000)
-                .each("end", function() {
-                    locatorEl
-                        .attr({
-                            'display': boxDisplay
-                        });  
-                });
 
+            this.$el.show();
+            locatorEl.transition()
+                .attr({
+                    'x' : x,
+                    'y' : y,
+                    'width' : width,
+                    'height' : height,
+                })
+                .duration(1000)
+            .each("end", function() {
+                if (scale === 1) {
+                    _this.$el.fadeOut();
+                    news.pubsub.emit('map:toggleShetland', true);
+                } else {
+                    _this.$el.fadeIn();
+                }
+            });
         }
     });
 });

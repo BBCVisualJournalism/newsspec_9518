@@ -19,5 +19,18 @@
 		.constituency-path:hover{
 			fill-opacity: .6;
 		}
+		.shetland--pullout{
+			.shetland-pullout--box{
+				stroke: #333;
+				stroke-width: 2;
+				fill: transparent;
+			}
+		}
+		.shetland--pullout:hover{
+			cursor: pointer;
+			.constituency-path{
+				fill-opacity: .6;
+			}
+		}
 	}
 }

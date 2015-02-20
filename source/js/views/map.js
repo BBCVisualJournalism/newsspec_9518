@@ -11,8 +11,14 @@ define([
             this.features = this.mapModel.get('topoJson');
             this.d3El = d3.select(this.el);
 
-            this.width = 750;
-            this.height = 750;
+            this.initMap();
+
+            /* LISTNERS */
+            news.pubsub.on('map:toggleShetland', this.toggleShetland.bind(this));
+        },
+        initMap: function () {
+            this.width = 375;
+            this.height = 375;
 
             this.projection = d3.geo.mercator()
                 .scale(this.mapModel.get('scale'))
@@ -41,7 +47,8 @@ define([
                 .attr('d', this.path)
                 .on("click", this.handleConstituencyClick.bind(this));
 
-            
+            this.pulloutShetland();
+
             this.loadLocator();
     
 
@@ -61,11 +68,16 @@ define([
             if (scaleDiff !== this.scale || centroid !== centroid) {
                 this.centroid = centroid;
                 this.scale = scaleDiff;
+                this.toggleShetland(false);
 
                 this.translation = [((this.width /2) - (this.centroid [0] * scaleDiff)), ((this.height /2) - (this.centroid [1] * scaleDiff))];
             } else {
                 this.centroid = [(this.width / 2), (this.height / 2)]
                 this.scale = 1;
+
+                if (!this.mapModel.get('locator')) {
+                    this.toggleShetland(true);
+                }
 
                 this.translation = [0, 0];
             }
@@ -83,6 +95,49 @@ define([
             if (this.mapModel.get('locator') === true) {
                 var locatorView = new LocatorView({mapModel: this.mapModel});
                 this.$el.append(locatorView.render());
+            }
+        },
+        pulloutShetland: function () {
+            this.shetlandPullout = this.svg.append('svg')
+                .attr({
+                    'class': 'shetland--pullout',
+                    'x': 295,
+                    'y': 0,
+                    'width': 81,
+                    'height': 150
+                });
+
+            this.shetlandPullout.append('rect')
+                .attr({
+                    'class': 'shetland-pullout--box',
+                    'x': 2,
+                    'y': 2,
+                    'width': 77,
+                    'height': 146
+                });
+
+            this.shetlandGroup = this.shetlandPullout.append('g');
+
+            var shetlandsPath = this.group.select('[data-gssid="S14000051"]')
+
+            this.shetlandGroup.append('path')
+                .attr('class', 'constituency-path')
+                .attr('data-gssid', 'S14000051')
+                .attr('d', shetlandsPath.attr('d'));
+                
+
+            this.shetlandPullout.on("click", function () {
+                shetlandsPath.on('click').call(shetlandsPath.node(), shetlandsPath.datum());
+            });
+
+            this.shetlandGroup.attr('transform', 'translate(-175, 135)');
+        },
+        toggleShetland: function (show) {
+            if (this.shetlandPullout) {
+                var diplayValue = show? 1 : 0;
+                this.shetlandPullout.transition()
+                    .duration(500)
+                    .attr('opacity', diplayValue);
             }
         },
         emitZoomBoundingBox: function () {
