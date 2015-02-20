@@ -19,16 +19,23 @@ define([
             news.pubsub.on('map:zoom-box', this.zoomBoxUpdate.bind(this));
         },
         initMap: function () {
+            var _this = this;
             var translate = this.mapModel.get('translate');
             translate[0] *= 0.2;
             translate[1] *= 0.2;
 
-            this.projection = d3.geo.mercator()
+            var projection = d3.geo.mercator()
                 .scale(this.mapModel.get('scale') * 0.2)
                 .translate(translate);
 
+            var simplify = d3.geo.transform({
+              point: function(x, y, z) {
+                if (z >= 0.5) this.stream.point(projection([x, y]));
+              }
+            });
+
             this.path = d3.geo.path()
-                .projection(this.projection);
+                .projection(simplify);
 
             this.svg = d3.select(this.el)
                 .append('svg')
@@ -49,6 +56,8 @@ define([
                 .enter().append('path')
                 .attr('class', 'constituency-path')
                 .attr('d', this.path);
+
+            this.$el.show();
 
             return this.$el;
         },

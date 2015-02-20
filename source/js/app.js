@@ -29,7 +29,12 @@ define(['lib/news_special/bootstrap', 'd3', 'lib/vendors/d3/topojson', 'lib/vend
                 .defer(d3.json, 'maps/uk.json')
                 .await(function (error, mapTopoJson) {
                     if (!error) {
-                        config.topoJson = Topojson.feature(mapTopoJson, mapTopoJson.objects['boundaries']).features;
+                        var preSimplified = Topojson.presimplify(mapTopoJson),
+                        features = Topojson.feature(preSimplified, preSimplified.objects['boundaries']).features;
+                        config.topoJson = features;
+                        // config.topoJson = _.filter(features, function (feature) {
+                        //     return feature.properties.PCON12CD.match(/^W/)? true : false;
+                        // });
                         _this.addMapWrapper(config);
                     } else {
                         throw 'Error: Unable to load one of the dependencies. (' + error.responseText + ')';

@@ -38,21 +38,16 @@
         createIframe: function () {
 
             var linkId        = this.linkId,
-                link          = document.getElementById(linkId),
-                href          = link.href,
-                token         = link.parentNode.className,
+                href          = '<%= path %>/<%= vocab_dir %>/index.html?v=<%= version %>',
                 iframeWatcher = this,
                 hostId        = this.getWindowLocationOrigin(),
                 urlParams     = window.location.hash || '',
                 hostUrl       = encodeURI(window.location.href.replace(urlParams, '')),
-                onBBC         = this.onBbcDomain();
+                onBBC         = this.onBbcDomain(),
+                container     = document.getElementById('<%= iframeUid %>-container');
             
-            this.staticHeight = link.getAttribute('data-static-iframe-height');
-            this.addLoadingSpinner(link, linkId);
-
-            if (this.hostIsNewsApp(token)) {
-                hostId = token;
-            }
+            this.staticHeight = 600;
+            this.addLoadingSpinner(container, linkId);
 
             this.elm = document.createElement('iframe');
             this.elm.className = 'responsive-iframe';
@@ -65,8 +60,7 @@
 
             this.elm.src = href + '&hostid=' + hostId.split('//')[1] + '&hostUrl=' + hostUrl + '&iframeUID=' + linkId + '&onbbcdomain=' + onBBC + urlParams;
 
-            link.parentNode.appendChild(this.elm);
-            link.parentNode.removeChild(link);
+            container.appendChild(this.elm);
 
             this.lastRecordedHeight = this.elm.height;
             this.iframeInstructionsRan = false;
@@ -80,11 +74,11 @@
             this.removeFallbackImageFromHostPage();
         },
 
-        addLoadingSpinner: function (link, iframeUID) {
+        addLoadingSpinner: function (container, iframeUID) {
             var spinnerHolder = document.createElement('div');
             spinnerHolder.id  = iframeUID + '--bbc-news-visual-journalism-loading-spinner';
             spinnerHolder.className = 'bbc-news-visual-journalism-loading-spinner';
-            link.parentNode.appendChild(spinnerHolder);
+            container.appendChild(spinnerHolder);
         },
 
         handleIframeLoad: function (startIframing) {
@@ -286,13 +280,13 @@
     function cutsTheMustard() {
         
         var modernDevice =
-                document.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#BasicStructure', '1.1') &&
-                'querySelector' in document &&
-                'localStorage' in window &&
-                'addEventListener' in window,
-            atLeastIE8   = !!(document.documentMode && (document.documentMode >= 8));
+            'querySelector' in document &&
+            'localStorage' in window &&
+            'addEventListener' in window &&
+            !!document.createElementNS &&
+            !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
 
-        return modernDevice || atLeastIE8;
+        return modernDevice;
     }
 
     if (cutsTheMustard()) {

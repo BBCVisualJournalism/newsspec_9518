@@ -14,11 +14,10 @@
 		left: 0;
 
 		.constituency-path{
-			fill: #000;
-		    fill-opacity: .5;
+			fill: #999;
 		}
 		.constituency-path:hover{
-			fill: red;
+			fill-opacity: .6;
 		}
 	}
 }

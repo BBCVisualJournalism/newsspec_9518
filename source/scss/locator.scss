@@ -1,7 +1,7 @@
 .locator-map--container{
+	display: none;
 	float: right;
 	box-sizing: initial;
-	display: inline-block;
 	position: relative;
 	width: 20%;
 	padding-bottom: 20%;
@@ -16,10 +16,10 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		
+
 		.constituency-path{
 			fill-opacity: 1;
-			fill: green;
+			fill: #999;
 		}
 
 		.locator-box {
