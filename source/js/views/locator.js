@@ -24,7 +24,7 @@ define([
             translate[1] *= 0.2;
 
             this.projection = d3.geo.mercator()
-                .scale(this.mapModel.get('scale') * 0.2)
+                .scale(this.mapModel.get('mapScale') * 0.2)
                 .translate(translate);
 
             this.path = d3.geo.path()
@@ -64,7 +64,7 @@ define([
                     'display': 'none'
                 });
         },
-        zoomBoxUpdate: function (zoomBox, scale) {
+        zoomBoxUpdate: function (zoomBox, scale, animate) {
             var _this = this;
 
             var x =(zoomBox.left / 5) , 
@@ -83,22 +83,36 @@ define([
             var locatorEl = this.svg.select('.locator-box');
 
             this.$el.show();
-            locatorEl.transition()
-                .attr({
-                    'x' : x,
-                    'y' : y,
-                    'width' : width,
-                    'height' : height,
-                })
-                .duration(1000)
-            .each("end", function() {
+
+            var attr = {
+                'x' : x,
+                'y' : y,
+                'width' : width,
+                'height' : height,
+            };
+
+            if (animate) {
+                locatorEl.transition()
+                    .attr(attr)
+                    .duration(1000)
+                .each("end", function() {
+                    if (scale === 1) {
+                        _this.$el.fadeOut();
+                        news.pubsub.emit('map:toggleShetland', true);
+                    } else {
+                        _this.$el.fadeIn();
+                    }
+                });
+            } else {
+                locatorEl.attr(attr);
                 if (scale === 1) {
-                    _this.$el.fadeOut();
-                    news.pubsub.emit('map:toggleShetland', true);
+                    this.$el.hide();
                 } else {
-                    _this.$el.fadeIn();
+                    this.$el.show();
                 }
-            });
+            }
+
+
         }
     });
 });

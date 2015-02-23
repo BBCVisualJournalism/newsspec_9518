@@ -13,7 +13,7 @@ define([
 
             this.initMap();
 
-            /* LISTNERS */
+            /* LISTENERS */
             news.pubsub.on('map:toggleShetland', this.toggleShetland.bind(this));
         },
         initMap: function () {
@@ -21,7 +21,7 @@ define([
             this.height = 375;
 
             this.projection = d3.geo.mercator()
-                .scale(this.mapModel.get('scale'))
+                .scale(this.mapModel.get('mapScale'))
                 .translate(this.mapModel.get('translate'));
 
             this.path = d3.geo.path()
@@ -45,14 +45,39 @@ define([
                 .attr('class', 'constituency-path')
                 .attr('data-gssid', this.getDataGssIdFrom)
                 .attr('d', this.path)
-                .on("click", this.handleConstituencyClick.bind(this));
+                .on("click", _.debounce(this.handleConstituencyClick.bind(this), 350, true));
 
-            this.pulloutShetland();
+            if (this.mapModel.get('pulloutShetland') === true) {
+                this.pulloutShetland();
+            }
 
             this.loadLocator();
-    
+
+            this.positionMap();
 
             return this.$el;
+        },
+        positionMap: function () {
+            var gssidCenter = this.mapModel.get('gssid'),
+                center = this.mapModel.get('center'),
+                scale = this.mapModel.get('scale');
+
+            var translation;
+
+            if (gssidCenter) {
+                // Center to GSSID HERE.
+            } else if (center && scale) {
+                this.centroid = center;
+                this.scale = scale;
+                translation = [((this.width /2) - (this.centroid [0] * this.scale)), ((this.height /2) - (this.centroid [1] * this.scale))];
+            }
+
+            if (translation) {
+                this.emitZoomBoundingBox(false);
+
+                this.group
+                    .attr('transform', 'translate(' + translation[0] + ',' + translation[1] + ') scale(' + this.scale + ')');
+            }
         },
         handleConstituencyClick: function (d){
             var centroid = this.path.centroid(d);
@@ -63,30 +88,28 @@ define([
 
             var scaleDiff = (xDiff > yDiff)? (this.width * 0.6 / xDiff) : (this.height * 0.6 / yDiff);
 
-            var transform;
 
             if (scaleDiff !== this.scale || centroid !== centroid) {
                 this.centroid = centroid;
                 this.scale = scaleDiff;
                 this.toggleShetland(false);
 
-                this.translation = [((this.width /2) - (this.centroid [0] * scaleDiff)), ((this.height /2) - (this.centroid [1] * scaleDiff))];
             } else {
-                this.centroid = [(this.width / 2), (this.height / 2)]
-                this.scale = 1;
+                this.scale = this.mapModel.get('scale');
+                this.centroid = this.mapModel.get('center');
 
                 if (!this.mapModel.get('locator')) {
                     this.toggleShetland(true);
                 }
-
-                this.translation = [0, 0];
             }
 
-            this.emitZoomBoundingBox();
+            var translation = [((this.width /2) - (this.centroid[0] * this.scale)), ((this.height /2) - (this.centroid[1] * this.scale))];
+
+            this.emitZoomBoundingBox(true);
 
             this.group.transition()
                 .duration(1000)
-                .attr('transform', 'translate(' + this.translation[0] + ',' + this.translation[1] + ') scale(' + this.scale + ')');
+                .attr('transform', 'translate(' + translation[0] + ',' + translation[1] + ') scale(' + this.scale + ')');
         },
         getDataGssIdFrom: function (feature) {
             return feature.properties.PCON12CD;
@@ -134,20 +157,26 @@ define([
         },
         toggleShetland: function (show) {
             if (this.shetlandPullout) {
-                var diplayValue = show? 1 : 0;
+                var _this = this;
+                var opacityValue = show? 1 : 0;
+                this.shetlandPullout.attr('display', 'block');
                 this.shetlandPullout.transition()
                     .duration(500)
-                    .attr('opacity', diplayValue);
+                    .attr('opacity', opacityValue)
+                    .each("end", function() {
+                        var displayValue = show? 'block' : 'none';
+                        _this.shetlandPullout.attr('display', displayValue);
+                    });
             }
         },
-        emitZoomBoundingBox: function () {
+        emitZoomBoundingBox: function (animate) {
             var zoomBox = {
                 left: this.centroid[0] - (this.width / this.scale / 2),
                 top: this.centroid[1] - (this.height / this.scale / 2),
                 right: this.centroid[0] + (this.width / this.scale / 2),
                 bottom: this.centroid[1] + (this.height / this.scale / 2)
             }
-            news.pubsub.emit('map:zoom-box', [zoomBox, this.scale]);
+            news.pubsub.emit('map:zoom-box', [zoomBox, this.scale, animate]);
         }
     });
 });

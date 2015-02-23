@@ -1,6 +1,9 @@
 define(['lib/news_special/bootstrap', 'd3', 'lib/vendors/d3/topojson', 'lib/vendors/d3/queue', 'backbone', 'models/map', 'views/mapWrapper'], function (news, d3, Topojson, queue, Backbone, MapModel, MapWrapper) {
 
-   
+    var mapConfig = {
+        'translate': [75, 372],
+        'mapScale': 465
+    };
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -10,14 +13,42 @@ define(['lib/news_special/bootstrap', 'd3', 'lib/vendors/d3/topojson', 'lib/vend
         },
 
         ukMap: function () {
-            this.loadMap({
-                'translate': [75, 372],
-                'scale': 465,
+            var ukMapConfig = {
+                'pulloutShetland': true,
                 'locator': true
-            });
+            };
+            this.loadMap(_.extend(mapConfig, ukMapConfig));
         },
         nation: function (nation) {
-            console.log('you are viewing the ' + nation + ' map');
+            var nationInfo;
+            switch (nation) {
+            case 'england':
+                nationInfo = {
+                    'scale': 1.55,
+                    'center': [220, 257]
+                };
+                break;
+            case 'northernIreland':
+                nationInfo = {
+                    'scale': 5.5,
+                    'center': [110, 180]
+                };
+                break;
+            case 'scotland':
+                nationInfo = {
+                    'scale': 8,
+                    'center': [-403.6396484375, -800.28466796875]
+                };
+                break;
+            case 'wales':
+                nationInfo = {
+                    'scale': 4,
+                    'center': [181, 273]
+                };
+                break;
+            }
+
+            this.loadMap(_.extend(mapConfig, nationInfo));
         },
         constituency: function (constituency) {
             console.log('you are viewing the ' + constituency + ' constituency');
