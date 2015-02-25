@@ -8,7 +8,7 @@ define([
         className: 'main-map--container',
         initialize: function (options) {
             this.mapModel = options.mapModel;
-            this.features = this.mapModel.get('topoJson');
+            this.features = this.mapModel.get('features');
             this.d3El = d3.select(this.el);
 
             this.initMap();
@@ -51,8 +51,8 @@ define([
                 this.pulloutShetland();
             }
 
+            this.loadRepIreland();
             this.loadLocator();
-
             this.positionMap();
 
             return this.$el;
@@ -113,6 +113,18 @@ define([
         },
         getDataGssIdFrom: function (feature) {
             return feature.properties.PCON12CD;
+        },
+        loadRepIreland: function () {
+            if (this.mapModel.get('repIreland') === true) {
+                this.group.insert('image', ':first-child')
+                    .attr({
+                        'xlink:href': 'img/niOutline.png',
+                        'x': 27,
+                        'y': 144,
+                        'width': 98,
+                        'height': 155
+                    });
+            }
         },
         loadLocator: function () {
             if (this.mapModel.get('locator') === true) {

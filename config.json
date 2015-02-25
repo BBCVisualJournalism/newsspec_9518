@@ -7,6 +7,6 @@
   "imageWidths":    ["320", "640", "1024"],
   "services": {
     "default": "english",
-    "others":  "*"
+    "others":  ["cymru"]
   }
 }

@@ -57,7 +57,8 @@ module.exports = function (grunt) {
         grunt.task.run('uglify'); 
     });
 
-    var applicationJS = ['requirejs:jquery1', 'requirejs:jquery2'];
+    var applicationJS = ['requirejs:jquery1', 'requirejs:jquery2', 'requirejs:jquery1-cymru', 'requirejs:jquery2-cymru'];
+    // var applicationJS = ['requirejs:jquery1', 'requirejs:jquery2'];
     if (grunt.config.get('config').scaffoldLite === 'true') {
         applicationJS = ['requirejs:lite'];
     }

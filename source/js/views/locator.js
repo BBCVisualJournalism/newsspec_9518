@@ -7,7 +7,7 @@ define([
         className: 'locator-map--container',
         initialize: function (options) {
             this.mapModel = options.mapModel;
-            this.features = this.mapModel.get('topoJson');
+            this.features = this.mapModel.get('features');
             this.d3El = d3.select(this.el);
 
             this.width = 75;

@@ -21,14 +21,14 @@ if (scaffoldLite) {
                 settings  = getSettings(browserType, debugMode),
                 done      = false,
                 script    = document.createElement('script');
-            script.src = "<%= pathStatic %>/<%= vocab_dir %>/js/lib/vendors/require/require-2.1.0.js";
+            script.src = "<%= pathStatic %>/<%= language %>/js/lib/vendors/require/require-2.1.0.js";
             script.type = "text/javascript";
             script.onload = script.onreadystatechange = function() {
                 if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
                     done = true;
                     require.config(settings.requireConfig);
                     require([settings.moduleToStartApp], function () {
-                        require(['app'], function (app) {});
+                        require(['app-<%= language %>'], function (app) {});
                     });
                 }
             }
@@ -46,16 +46,16 @@ if (scaffoldLite) {
         function getSettings(browserType, debug) {
             var config = {
                     urlArgs: "v=<%= version %>",
-                    baseUrl: "<%= pathStatic %>/<%= vocab_dir %>/js/"
+                    baseUrl: "<%= pathStatic %>/<%= language %>/js/"
                 },
-                moduleToStartApp = '<%= pathStatic %>/<%= vocab_dir %>/js/all-'+browserType+'.js';
+                moduleToStartApp = '<%= pathStatic %>/<%= language %>/js/all-<%= language %>-'+browserType+'.js';
 
             if (debug) {
                 var jqueryVersion   = (browserType === 'html5') ? 'jquery-2.0.3' : 'jquery-1.9.1';
                 config.paths        = <%= amdModulePaths %>;
                 config.paths.jquery = './lib/vendors/jquery/' + jqueryVersion;
-                config.paths.app    = './app';
-                moduleToStartApp    = '<%= pathStatic %>/<%= vocab_dir %>/js/app.js';
+                config.paths.app    = './app-<%= language %>';
+                moduleToStartApp    = '<%= pathStatic %>/<%= language %>/js/app.js';
             }
             config.paths = config.paths || {};
             config.paths.d3 = 'lib/vendors/d3/d3.min';

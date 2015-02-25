@@ -10,19 +10,22 @@
 	.main-map--svg{
 		display: inline-block;
 		position: absolute;
+		background-color: #bacbdc;
 		top: 0;
 		left: 0;
 
 		.constituency-path{
-			fill: #999;
+			fill: #fff;
+			stroke: #bacbdc;
+			stroke-width: 0.05;
 		}
 		.constituency-path:hover{
-			fill-opacity: .6;
+			fill: #e3e9f1;
 		}
 		.shetland--pullout{
 			.shetland-pullout--box{
 				stroke: #333;
-				stroke-width: 2;
+				stroke-width: 1;
 				fill: transparent;
 			}
 		}

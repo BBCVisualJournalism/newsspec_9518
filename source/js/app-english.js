@@ -1,4 +1,6 @@
-define(['lib/news_special/bootstrap', 'd3', 'lib/vendors/d3/topojson', 'lib/vendors/d3/queue', 'backbone', 'models/map', 'views/mapWrapper'], function (news, d3, Topojson, queue, Backbone, MapModel, MapWrapper) {
+define(['lib/news_special/bootstrap', 'lib/vendors/d3/topojson', 'backbone', 'models/map', 'views/mapWrapper', 'text!maps/uk.json'], function (news, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson) {
+
+    mapTopoJson = JSON.parse(mapTopoJson);
 
     var mapConfig = {
         'translate': [75, 372],
@@ -15,6 +17,7 @@ define(['lib/news_special/bootstrap', 'd3', 'lib/vendors/d3/topojson', 'lib/vend
         ukMap: function () {
             var ukMapConfig = {
                 'pulloutShetland': true,
+                'repIreland': true,
                 'locator': true
             };
             this.loadMap(_.extend(mapConfig, ukMapConfig));
@@ -36,8 +39,8 @@ define(['lib/news_special/bootstrap', 'd3', 'lib/vendors/d3/topojson', 'lib/vend
                 break;
             case 'scotland':
                 nationInfo = {
-                    'scale': 8,
-                    'center': [-403.6396484375, -800.28466796875]
+                    'scale': 1.2,
+                    'center': [180, 30]
                 };
                 break;
             case 'wales':
@@ -55,21 +58,10 @@ define(['lib/news_special/bootstrap', 'd3', 'lib/vendors/d3/topojson', 'lib/vend
         },
 
         loadMap: function (config) {
-            var _this = this;
-            queue()
-                .defer(d3.json, 'maps/uk.json')
-                .await(function (error, mapTopoJson) {
-                    if (!error) {
-                        var features = Topojson.feature(mapTopoJson, mapTopoJson.objects['boundaries']).features;
-                        config.topoJson = features;
-                        // config.topoJson = _.filter(features, function (feature) {
-                        //     return feature.properties.PCON12CD.match(/^W/)? true : false;
-                        // });
-                        _this.addMapWrapper(config);
-                    } else {
-                        throw 'Error: Unable to load one of the dependencies. (' + error.responseText + ')';
-                    }
-                });
+            var features = Topojson.feature(mapTopoJson, mapTopoJson.objects['boundaries']).features;
+            config.features = features;
+
+            this.addMapWrapper(config);
         },
         addMapWrapper: function (config) {
             var container = news.$('.main'),

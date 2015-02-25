@@ -9,6 +9,7 @@ module.exports = function (grunt) {
         'pubsub': './lib/vendors/jquery/pubsub',
         'backbone': './lib/vendors/backbone/backbone',
         'underscore': './lib/vendors/backbone/underscore',
+        'text': './lib/vendors/require/text',
         'd3': 'empty:'
     };
 
@@ -29,8 +30,8 @@ module.exports = function (grunt) {
             optimize: 'uglify2',
             generateSourceMaps: false,
             preserveLicenseComments: false,
-            name: './app',
-            out: './content/<%= config.services.default %>/js/all-legacyie.js'
+            name: './app-english',
+            out: './content/<%= config.services.default %>/js/all-english-legacyie.js'
         }
     });
     grunt.config(['requirejs', 'jquery2'], {
@@ -40,8 +41,30 @@ module.exports = function (grunt) {
             optimize: 'uglify2',
             generateSourceMaps: true,
             preserveLicenseComments: false,
-            name: './app',
-            out: './content/<%= config.services.default %>/js/all-html5.js'
+            name: './app-english',
+            out: './content/<%= config.services.default %>/js/all-english-html5.js'
+        }
+    });
+    grunt.config(['requirejs', 'jquery1-cymru'], {
+        options: {
+            baseUrl: './source/js',
+            paths: requirePathsForJquery1build,
+            optimize: 'uglify2',
+            generateSourceMaps: false,
+            preserveLicenseComments: false,
+            name: './app-cymru',
+            out: './content/<%= config.services.default %>/js/all-cymru-legacyie.js'
+        }
+    });
+    grunt.config(['requirejs', 'jquery2-cymru'], {
+        options: {
+            baseUrl: './source/js',
+            paths: requirePathsForJquery2build,
+            optimize: 'uglify2',
+            generateSourceMaps: true,
+            preserveLicenseComments: false,
+            name: './app-cymru',
+            out: './content/<%= config.services.default %>/js/all-cymru-html5.js'
         }
     });
     grunt.config(['requirejs', 'lite'], {
