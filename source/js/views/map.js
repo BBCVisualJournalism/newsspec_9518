@@ -42,7 +42,9 @@ define([
                 .selectAll('path')
                 .data(this.features)
                 .enter().append('path')
-                .attr('class', 'constituency-path')
+                .attr('class', function (d) {
+                    return (d.properties.constituency_name)? 'constituency-path' : 'outline-path';
+                })
                 .attr('data-gssid', this.getDataGssIdFrom)
                 .attr('d', this.path)
                 .on("click", _.debounce(this.handleConstituencyClick.bind(this), 350, true));
@@ -52,6 +54,7 @@ define([
             }
 
             this.loadRepIreland();
+
             this.loadLocator();
             this.positionMap();
 
@@ -79,52 +82,57 @@ define([
                     .attr('transform', 'translate(' + translation[0] + ',' + translation[1] + ') scale(' + this.scale + ')');
             }
         },
-        handleConstituencyClick: function (d){
-            var centroid = this.path.centroid(d);
-            var bounds = this.path.bounds(d);
+        handleConstituencyClick: function (d, node){
+            if (d.properties.constituency_name) {
+                var centroid = this.path.centroid(d);
+                var bounds = this.path.bounds(d);
 
-            var xDiff =  bounds[1][0] - bounds[0][0];
-                yDiff =  bounds[1][1] - bounds[0][1];
+                var xDiff =  bounds[1][0] - bounds[0][0];
+                    yDiff =  bounds[1][1] - bounds[0][1];
 
-            var scaleDiff = (xDiff > yDiff)? (this.width * 0.6 / xDiff) : (this.height * 0.6 / yDiff);
+                var scaleDiff = (xDiff > yDiff)? (this.width * 0.6 / xDiff) : (this.height * 0.6 / yDiff);
 
 
-            if (scaleDiff !== this.scale || centroid !== centroid) {
-                this.centroid = centroid;
-                this.scale = scaleDiff;
-                this.toggleShetland(false);
+                if (scaleDiff !== this.scale || centroid !== centroid) {
+                    this.centroid = centroid;
+                    this.scale = scaleDiff;
+                    this.toggleShetland(false);
 
-            } else {
-                this.scale = this.mapModel.get('scale');
-                this.centroid = this.mapModel.get('center');
+                } else {
+                    this.scale = this.mapModel.get('scale');
+                    this.centroid = this.mapModel.get('center');
 
-                if (!this.mapModel.get('locator')) {
-                    this.toggleShetland(true);
+                    if (!this.mapModel.get('locator')) {
+                        this.toggleShetland(true);
+                    }
                 }
+
+                var translation = [((this.width /2) - (this.centroid[0] * this.scale)), ((this.height /2) - (this.centroid[1] * this.scale))];
+
+                this.emitZoomBoundingBox(true);
+
+                this.group.transition()
+                    .duration(1000)
+                    .attr('transform', 'translate(' + translation[0] + ',' + translation[1] + ') scale(' + this.scale + ')');
             }
-
-            var translation = [((this.width /2) - (this.centroid[0] * this.scale)), ((this.height /2) - (this.centroid[1] * this.scale))];
-
-            this.emitZoomBoundingBox(true);
-
-            this.group.transition()
-                .duration(1000)
-                .attr('transform', 'translate(' + translation[0] + ',' + translation[1] + ') scale(' + this.scale + ')');
         },
         getDataGssIdFrom: function (feature) {
-            return feature.properties.PCON12CD;
+            return feature.properties.constituency_name? feature.properties.constituency_name : 'outline';
         },
-        loadRepIreland: function () {
+        loadRepIreland: function () {/*
             if (this.mapModel.get('repIreland') === true) {
-                this.group.insert('image', ':first-child')
+                this.group.insert('svg', ':first-child')
                     .attr({
-                        'xlink:href': 'img/niOutline.png',
-                        'x': 27,
-                        'y': 144,
+                        'class': 'repIre-svg',
+                        'x': -250,
+                        'y': -200,
                         'width': 98,
-                        'height': 155
-                    });
-            }
+                        'height': 155,
+                        'viewbox': '0 0 841.89 595.28'
+                    })
+                    .append('g')
+                        .html($('#northern_ireland_path').html());
+            }*/
         },
         loadLocator: function () {
             if (this.mapModel.get('locator') === true) {

@@ -14,10 +14,18 @@
 		top: 0;
 		left: 0;
 
+		.repIre-svg{
+			overflow: visible;
+		}
+
 		.constituency-path{
 			fill: #fff;
-			stroke: #bacbdc;
+			stroke: #dcdcdc;
 			stroke-width: 0.05;
+		}
+		.outline-path{
+			fill: #fff;
+			fill-opacity: .5;
 		}
 		.constituency-path:hover{
 			fill: #e3e9f1;

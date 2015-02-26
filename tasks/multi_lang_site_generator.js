@@ -8,6 +8,8 @@ module.exports = function (grunt) {
     var projectFiles = {
         'index.html': 'index.html.tmpl',
         'index.inc':  'index.inc.tmpl',
+        'map_campaign.inc':  'index.inc.tmpl',
+        'map_results.inc':  'index.inc.tmpl',
         'test.html':  'test.html.tmpl'
     };
 

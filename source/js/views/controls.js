@@ -3,10 +3,12 @@ define([
     'backbone'
 ], function (news, Backbone) {
     return Backbone.View.extend({
+        className: 'map-controls',
         initialize: function () {
+            this.template = _.template( $("#map_controls_template").html(), {} );
         },
         render: function () {
-            this.$el.html('I\m going to control the map');
+            this.$el.html(this.template);
 
             return this.$el;
         }
