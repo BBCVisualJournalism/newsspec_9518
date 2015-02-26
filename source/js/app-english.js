@@ -1,4 +1,4 @@
-define(['lib/news_special/bootstrap', 'lib/vendors/d3/topojson', 'backbone', 'models/map', 'views/mapWrapper', 'text!maps/uk.json'], function (news, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson) {
+define(['lib/news_special/bootstrap', 'lib/vendors/d3/topojson', 'backbone', 'models/map', 'views/mapWrapper', 'text!maps/uk.topojson'], function (news, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson) {
 
     mapTopoJson = JSON.parse(mapTopoJson);
 

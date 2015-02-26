@@ -144,8 +144,8 @@ define([
             this.shetlandPullout = this.svg.append('svg')
                 .attr({
                     'class': 'shetland--pullout',
-                    'x': 295,
-                    'y': 0,
+                    'x': 286,
+                    'y': 8,
                     'width': 81,
                     'height': 150
                 });

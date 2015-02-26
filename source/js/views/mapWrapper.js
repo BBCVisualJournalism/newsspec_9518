@@ -5,6 +5,7 @@ define([
     'views/controls',
 ], function (news, Backbone, MapView, ControlsView) {
     return Backbone.View.extend({
+        className: 'map-wrapper',
         initialize: function (options) {
             this.container = options.container;
             this.mapModel = options.mapModel;
