@@ -78,8 +78,6 @@ define([
             this.scale = scale;
             this.translation = translation;
 
-            this.toggleShetland((scale <= this.initScale)); 
-
             this.emitZoomBoundingBox(animated);
         },
         getTranslationFromCentroid: function (centroid, scale) {
@@ -109,7 +107,8 @@ define([
 
             translation[0] = Math.min(-this.bounds[0][0] * scale, Math.max(-this.bounds[1][0] * scale + this.width, translation[0]));
             translation[1] = Math.min(-this.bounds[0][1] * scale, Math.max(-this.bounds[1][1] * scale + this.height, translation[1]));
-            this.setTranslationAndScale(translation, scale);  
+            this.setTranslationAndScale(translation, scale);
+            this.toggleShetland((scale <= this.initScale));   
 
             var _this = this;
             clearTimeout(this.panningTimeout);
@@ -128,13 +127,18 @@ define([
                 var scale = (xDiff > yDiff)? (this.width * 0.6 / xDiff) : (this.height * 0.6 / yDiff);
 
                 // If already zoomed into what user clicked, zoom out.
-                if (scale === this.scale && centroid === centroid) {
+                if (this.lastNode && this.lastNode === node) {
+                    this.lastNode = null;
                     scale = this.mapModel.get('scale');
                     centroid = this.mapModel.get('center');
+                }else{
+                    this.lastNode = node;
+                    this.toggleShetland(false);                 
                 }
 
                 var translation = this.getTranslationFromCentroid(centroid, scale);
                 this.setTranslationAndScale(translation, scale, true);
+
             }
         },
         getDataGssIdFrom: function (feature) {
