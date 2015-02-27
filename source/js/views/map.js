@@ -15,6 +15,7 @@ define([
 
             /* LISTENERS */
             news.pubsub.on('map:toggleShetland', this.toggleShetland.bind(this));
+            news.pubsub.on('map:reset', this.reset.bind(this));
         },
         initMap: function () {
             this.width = 375;
@@ -30,7 +31,7 @@ define([
                 .projection(this.projection);
 
             this.zoom = d3.behavior.zoom()
-                .scaleExtent([this.initScale * 0.8, Infinity])
+                .scaleExtent([this.initScale, Infinity])
               .on('zoom', this.zoomHandler.bind(this));
 
             this.svg = d3.select(this.el)
@@ -69,6 +70,21 @@ define([
 
             return this.$el;
         },
+        setTranslationAndScale: function (translation, scale, animated) {
+            var group = (animated)? this.group.transition().duration(1000) : this.group;
+            group.attr('transform', 'translate(' + translation[0] + ',' + translation[1] + ') scale(' + scale + ')');
+            
+            this.zoom.translate([translation[0], translation[1]]).scale(scale);
+            this.scale = scale;
+            this.translation = translation;
+
+            this.toggleShetland((scale <= this.initScale)); 
+
+            this.emitZoomBoundingBox(animated);
+        },
+        getTranslationFromCentroid: function (centroid, scale) {
+            return [((this.width /2) - (centroid[0] * scale)), ((this.height /2) - (centroid[1] * scale))]
+        },
         positionMap: function () {
             var gssidCenter = this.mapModel.get('gssid'),
                 centroid = this.mapModel.get('center'),
@@ -79,33 +95,21 @@ define([
             if (gssidCenter) {
                 // Center to GSSID HERE.
             } else if (centroid && scale) {
-                this.scale = scale;
-                translation = [((this.width /2) - (centroid [0] * this.scale)), ((this.height /2) - (centroid [1] * this.scale))];
+                translation = this.getTranslationFromCentroid(centroid, scale);
             }
 
-            if (translation) {
-                this.translation = translation;
-                this.emitZoomBoundingBox(false);
-
-
-                this.zoom.translate([translation[0], translation[1]]).scale(this.scale);
-                this.group.attr('transform', 'translate(' + translation[0] + ',' + translation[1] + ') scale(' + this.scale + ')');
+            if (translation && scale) {
+                this.setTranslationAndScale(translation, scale);
             }
         },
         zoomHandler: function () {
             this.isPanningOrZoom = true;
+            var scale = d3.event.scale,
+                translation = d3.event.translate;
 
-            this.scale = d3.event.scale;
-            this.translation = d3.event.translate;
-            this.translation[0] = Math.min(-this.bounds[0][0] * this.scale, Math.max(-this.bounds[1][0] * this.scale, d3.event.translate[0]));
-            this.translation[1] = Math.min(-this.bounds[0][1] * this.scale, Math.max(-this.bounds[1][1] * this.scale, d3.event.translate[1]));
-            this.zoom.translate(this.translation);
-
-            this.group.attr('transform', 'translate(' + this.translation[0] + ',' + this.translation[1] + ')scale(' + this.scale + ')');
-
-
-            this.emitZoomBoundingBox(false);
-            this.toggleShetland((this.scale <= this.initScale));   
+            translation[0] = Math.min(-this.bounds[0][0] * scale, Math.max(-this.bounds[1][0] * scale + this.width, translation[0]));
+            translation[1] = Math.min(-this.bounds[0][1] * scale, Math.max(-this.bounds[1][1] * scale + this.height, translation[1]));
+            this.setTranslationAndScale(translation, scale);  
 
             var _this = this;
             clearTimeout(this.panningTimeout);
@@ -121,29 +125,16 @@ define([
                 var xDiff =  bounds[1][0] - bounds[0][0];
                     yDiff =  bounds[1][1] - bounds[0][1];
 
-                var scaleDiff = (xDiff > yDiff)? (this.width * 0.6 / xDiff) : (this.height * 0.6 / yDiff);
+                var scale = (xDiff > yDiff)? (this.width * 0.6 / xDiff) : (this.height * 0.6 / yDiff);
 
-
-                if (scaleDiff !== this.scale || centroid !== centroid) {
-                    this.scale = scaleDiff;
-                    this.toggleShetland(false);
-
-                } else {
-                    this.scale = this.mapModel.get('scale');
+                // If already zoomed into what user clicked, zoom out.
+                if (scale === this.scale && centroid === centroid) {
+                    scale = this.mapModel.get('scale');
                     centroid = this.mapModel.get('center');
-
-                    if (!this.mapModel.get('locator')) {
-                        this.toggleShetland(true);
-                    }
                 }
 
-                this.translation = [((this.width /2) - (centroid[0] * this.scale)), ((this.height /2) - (centroid[1] * this.scale))];
-                this.emitZoomBoundingBox(true);
-
-                this.zoom.translate([this.translation[0], this.translation[1]]).scale(this.scale);
-                this.group.transition()
-                    .duration(1000)
-                    .attr('transform', 'translate(' + this.translation[0] + ',' + this.translation[1] + ') scale(' + this.scale + ')');
+                var translation = this.getTranslationFromCentroid(centroid, scale);
+                this.setTranslationAndScale(translation, scale, true);
             }
         },
         getDataGssIdFrom: function (feature) {
@@ -230,6 +221,13 @@ define([
                 bottom: (this.height - this.translation[1]) / this.scale
             }
             news.pubsub.emit('map:zoom-box', [zoomBox, this.scale, animate])
+        },
+        reset: function () {
+            var scale = this.mapModel.get('scale'),
+                centroid = this.mapModel.get('center'),
+                translation = this.getTranslationFromCentroid(centroid, scale);
+
+            this.setTranslationAndScale(translation, scale, true);
         }
     });
 });
