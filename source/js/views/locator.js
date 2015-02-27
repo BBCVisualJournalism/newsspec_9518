@@ -81,6 +81,7 @@ define([
             }
 
             var locatorEl = this.svg.select('.locator-box');
+            var willHide = (scale <= this.mapModel.get('scale'));
 
             this.$el.show();
 
@@ -96,7 +97,7 @@ define([
                     .attr(attr)
                     .duration(1000)
                 .each("end", function() {
-                    if (scale === 1) {
+                    if (willHide) {
                         _this.$el.fadeOut();
                         news.pubsub.emit('map:toggleShetland', true);
                     } else {
@@ -105,7 +106,7 @@ define([
                 });
             } else {
                 locatorEl.attr(attr);
-                if (scale === 1) {
+                if (willHide) {
                     this.$el.hide();
                 } else {
                     this.$el.show();

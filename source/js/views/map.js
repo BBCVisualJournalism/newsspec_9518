@@ -20,6 +20,7 @@ define([
             this.width = 375;
             this.height = 375;
             this.initScale = this.mapModel.get('scale');
+            this.bounds = this.mapModel.get('bounds');
 
             this.projection = d3.geo.mercator()
                 .scale(this.mapModel.get('mapScale'))
@@ -29,7 +30,7 @@ define([
                 .projection(this.projection);
 
             this.zoom = d3.behavior.zoom()
-              .scaleExtent([this.initScale * 0.8, 200])
+                .scaleExtent([this.initScale * 0.8, Infinity])
               .on('zoom', this.zoomHandler.bind(this));
 
             this.svg = d3.select(this.el)
@@ -50,12 +51,12 @@ define([
                 })
                 .attr('data-gssid', this.getDataGssIdFrom)
                 .attr('d', this.path)
-                .on("click", _.debounce(this.handleConstituencyClick.bind(this), 350, true));
+                .on('click', _.debounce(this.handleConstituencyClick.bind(this), 350, true));
             
             this.svg
                 .call(this.zoom)
                 .call(this.zoom.event)
-                .on("dblclick.zoom", null);
+                .on('dblclick.zoom', null);
 
             if (this.mapModel.get('pulloutShetland') === true) {
                 this.pulloutShetland();
@@ -94,10 +95,14 @@ define([
         zoomHandler: function () {
             this.isPanningOrZoom = true;
 
-            this.group.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-
             this.scale = d3.event.scale;
             this.translation = d3.event.translate;
+            this.translation[0] = Math.min(-this.bounds[0][0] * this.scale, Math.max(-this.bounds[1][0] * this.scale, d3.event.translate[0]));
+            this.translation[1] = Math.min(-this.bounds[0][1] * this.scale, Math.max(-this.bounds[1][1] * this.scale, d3.event.translate[1]));
+            this.zoom.translate(this.translation);
+
+            this.group.attr('transform', 'translate(' + this.translation[0] + ',' + this.translation[1] + ')scale(' + this.scale + ')');
+
 
             this.emitZoomBoundingBox(false);
             this.toggleShetland((this.scale <= this.initScale));   
@@ -194,7 +199,7 @@ define([
                 .attr('d', shetlandsPath.attr('d'));
                 
 
-            this.shetlandPullout.on("click", function () {
+            this.shetlandPullout.on('click', function () {
                 shetlandsPath.on('click').call(shetlandsPath.node(), shetlandsPath.datum());
             });
 
@@ -211,7 +216,7 @@ define([
                 this.shetlandPullout.transition()
                     .duration(500)
                     .attr('opacity', opacityValue)
-                    .each("end", function() {
+                    .each('end', function() {
                         var displayValue = show? 'block' : 'none';
                         _this.shetlandPullout.attr('display', displayValue);
                     });

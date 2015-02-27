@@ -4,7 +4,8 @@ define(['lib/news_special/bootstrap', 'lib/vendors/d3/topojson', 'backbone', 'mo
 
     var mapConfig = {
         'translate': [75, 372],
-        'mapScale': 465
+        'mapScale': 465,
+        'bounds': [[-200, -200], [375, 375]]
     };
 
     var Router = Backbone.Router.extend({
