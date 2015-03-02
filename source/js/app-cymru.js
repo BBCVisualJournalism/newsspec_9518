@@ -5,6 +5,7 @@ define(['lib/news_special/bootstrap', 'lib/vendors/d3/topojson', 'backbone', 'mo
     var mapConfig = {
         'translate': [75, 372],
         'mapScale': 465,
+        'maxScaleOut': 4,
         'bounds': [[110, 213], [230, 333]]
     };
 

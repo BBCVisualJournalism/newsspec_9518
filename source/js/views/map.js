@@ -16,6 +16,8 @@ define([
             /* LISTENERS */
             news.pubsub.on('map:toggleShetland', this.toggleShetland.bind(this));
             news.pubsub.on('map:reset', this.reset.bind(this));
+            news.pubsub.on('map:pan', this.pan.bind(this));
+            news.pubsub.on('map:zoomClicked', this.zoomClicked.bind(this));
         },
         initMap: function () {
             this.width = 375;
@@ -31,7 +33,7 @@ define([
                 .projection(this.projection);
 
             this.zoom = d3.behavior.zoom()
-                .scaleExtent([this.initScale, Infinity])
+                .scaleExtent([this.mapModel.get('maxScaleOut'), Infinity])
               .on('zoom', this.zoomHandler.bind(this));
 
             this.svg = d3.select(this.el)
@@ -103,10 +105,8 @@ define([
         zoomHandler: function () {
             this.isPanningOrZoom = true;
             var scale = d3.event.scale,
-                translation = d3.event.translate;
-
-            translation[0] = Math.min(-this.bounds[0][0] * scale, Math.max(-this.bounds[1][0] * scale + this.width, translation[0]));
-            translation[1] = Math.min(-this.bounds[0][1] * scale, Math.max(-this.bounds[1][1] * scale + this.height, translation[1]));
+                translation = this.applyBounds(d3.event.translate, scale);
+            
             this.setTranslationAndScale(translation, scale);
             this.toggleShetland((scale <= this.initScale));   
 
@@ -226,12 +226,67 @@ define([
             }
             news.pubsub.emit('map:zoom-box', [zoomBox, this.scale, animate])
         },
+        /* Ensures a translation doesn't take the map out of the specified bounds */
+        applyBounds: function (translation, scale) {
+            translation[0] = Math.min(-this.bounds[0][0] * scale, Math.max(-this.bounds[1][0] * scale + this.width, translation[0]));
+            translation[1] = Math.min(-this.bounds[0][1] * scale, Math.max(-this.bounds[1][1] * scale + this.height, translation[1]));
+            return translation;
+        },
         reset: function () {
             var scale = this.mapModel.get('scale'),
                 centroid = this.mapModel.get('center'),
                 translation = this.getTranslationFromCentroid(centroid, scale);
 
             this.setTranslationAndScale(translation, scale, true);
+        },
+        pan: function (direction) {
+            var translation = this.translation;
+            switch (direction) {
+                case 'left':
+                translation[0] += this.width / 3;
+                break
+                case 'right':
+                translation[0] -= this.width / 3;
+                break               
+                case 'up':
+                translation[1] += this.height / 3;
+                break
+                case 'down':
+                translation[1] -= this.height / 3;
+                break;
+            }
+            this.setTranslationAndScale(this.applyBounds(translation, this.scale), this.scale, true);
+        },
+        zoomClicked: function (direction) { 
+            var scale = this.scale,
+                translation = this.translation,
+                center = [this.width / 2, this.height / 2],
+                scaleFactor;
+
+            switch (direction) {
+                case 'in':
+                scaleFactor = 1.7;
+                break;
+                case 'out':
+                scaleFactor = 1 / 1.7;
+                break;
+            }
+
+            var scale = scale * scaleFactor,
+                maxScale = this.mapModel.get('maxScaleOut');
+
+            if (scale < maxScale) {
+                scale = maxScale;
+                scaleFactor = scale / this.scale;
+            }
+
+            translation[0] = (translation[0] - center[0]) * scaleFactor + center[0];
+            translation[1] = (translation[1] - center[1]) * scaleFactor + center[1];
+
+            this.setTranslationAndScale(this.applyBounds(translation, scale), scale, true);
+            if(scale > this.initScale) {
+                this.toggleShetland(false);
+            }
         }
     });
 });
