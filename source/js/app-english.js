@@ -55,7 +55,11 @@ define(['lib/news_special/bootstrap', 'lib/vendors/d3/topojson', 'backbone', 'mo
             this.loadMap(_.extend(mapConfig, nationInfo));
         },
         constituency: function (constituency) {
-            console.log('you are viewing the ' + constituency + ' constituency');
+            var constituencyInfo = {
+                'gssid': constituency
+            };
+
+            this.loadMap(_.extend(mapConfig, constituencyInfo));
         },
 
         loadMap: function (config) {

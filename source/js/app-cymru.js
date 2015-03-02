@@ -6,30 +6,30 @@ define(['lib/news_special/bootstrap', 'lib/vendors/d3/topojson', 'backbone', 'mo
         'translate': [75, 372],
         'mapScale': 465,
         'maxScaleOut': 4,
-        'bounds': [[110, 213], [230, 333]]
+        'bounds': [[110, 213], [230, 333]],
+        'pulloutShetland': false,
+        'repIreland': false,
+        'locator': true,
+        'scale': 4,
+        'center': [170, 273]
     };
 
     var Router = Backbone.Router.extend({
         routes: {
-            'nation/:nation': 'nation',
             'constituency/:gssid': 'constituency',
             '*default': 'welshMap'
         },
 
         welshMap: function () {
-            var welshMapConfig = {
-                'pulloutShetland': false,
-                'repIreland': false,
-                'locator': false,
-                'scale': 4,
-                'center': [170, 273]
-            };
-            this.loadMap(_.extend(mapConfig, welshMapConfig));
+            this.loadMap(mapConfig);
         },
         constituency: function (constituency) {
-            console.log('you are viewing the ' + constituency + ' constituency');
-        },
+            var constituencyInfo = {
+                'gssid': constituency
+            };
 
+            this.loadMap(_.extend(mapConfig, constituencyInfo));
+        },
         loadMap: function (config) {
             var features = Topojson.feature(mapTopoJson, mapTopoJson.objects['boundaries']).features;
             config.features = features;

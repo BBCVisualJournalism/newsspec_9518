@@ -46,7 +46,8 @@ if (scaffoldLite) {
         function getSettings(browserType, debug) {
             var config = {
                     urlArgs: "v=<%= version %>",
-                    baseUrl: "<%= pathStatic %>/<%= language %>/js/"
+                    baseUrl: "<%= pathStatic %>/<%= language %>/js/",
+                    waitSeconds: 20
                 },
                 moduleToStartApp = '<%= pathStatic %>/<%= language %>/js/all-<%= language %>-'+browserType+'.js';
 

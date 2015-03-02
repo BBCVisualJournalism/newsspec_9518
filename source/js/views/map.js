@@ -21,7 +21,7 @@ define([
         },
         initMap: function () {
             this.width = 375;
-            this.height = 375;
+            this.height = 420;
             this.initScale = this.mapModel.get('scale');
             this.bounds = this.mapModel.get('bounds');
 
@@ -93,14 +93,47 @@ define([
             var translation;
 
             if (gssidCenter) {
-                // Center to GSSID HERE.
+                // Center to GSSID.
+                var feature = this.getFeatureFromGssid(gssidCenter),
+                    tAndS = this.getTranslationAndScaleFromFeature(feature);
+
+                translation = tAndS.translation;
+                scale = tAndS.scale;
+                this.zoomedConstituency = feature.properties.constituency_name;
             } else if (centroid && scale) {
+                //Center to nation
                 translation = this.getTranslationFromCentroid(centroid, scale);
             }
 
             if (translation && scale) {
                 this.setTranslationAndScale(translation, scale);
             }
+        },
+        getFeatureFromGssid: function (gssid) {
+            var returnFeature = null;
+            _.every(this.features, function (feature) {
+                if (feature.properties.constituency_name === gssid) {
+                    returnFeature = feature;
+                    return false;
+                }
+                return true;
+            });
+            return returnFeature;
+        },
+        getTranslationAndScaleFromFeature: function (feature) {
+            var centroid = this.path.centroid(feature),
+                bounds = this.path.bounds(feature);
+
+            var xDiff =  bounds[1][0] - bounds[0][0];
+                yDiff =  bounds[1][1] - bounds[0][1];
+
+            var scale = (xDiff > yDiff)? (this.width * 0.6 / xDiff) : (this.height * 0.6 / yDiff);
+
+            return {
+                scale: scale,
+                translation: this.getTranslationFromCentroid(centroid, scale)
+            }
+
         },
         zoomHandler: function () {
             this.isPanningOrZoom = true;
@@ -118,25 +151,23 @@ define([
         },
         handleConstituencyClick: function (d, node){
             if (!this.isPanningOrZoom && d.properties.constituency_name) {
-                var centroid = this.path.centroid(d);
-                var bounds = this.path.bounds(d);
 
-                var xDiff =  bounds[1][0] - bounds[0][0];
-                    yDiff =  bounds[1][1] - bounds[0][1];
-
-                var scale = (xDiff > yDiff)? (this.width * 0.6 / xDiff) : (this.height * 0.6 / yDiff);
+                var scale, translation;
 
                 // If already zoomed into what user clicked, zoom out.
-                if (this.lastNode && this.lastNode === node) {
-                    this.lastNode = null;
+                if (this.zoomedConstituency && this.zoomedConstituency === d.properties.constituency_name) {
+                    this.zoomedConstituency = null;
                     scale = this.mapModel.get('scale');
                     centroid = this.mapModel.get('center');
+                    translation = this.getTranslationFromCentroid(centroid, scale);
                 }else{
-                    this.lastNode = node;
+                    var tAndS = this.getTranslationAndScaleFromFeature(d);
+                    scale = tAndS.scale;
+                    translation = tAndS.translation;
+                    this.zoomedConstituency = d.properties.constituency_name;
                     this.toggleShetland(false);                 
                 }
 
-                var translation = this.getTranslationFromCentroid(centroid, scale);
                 this.setTranslationAndScale(translation, scale, true);
 
             }
