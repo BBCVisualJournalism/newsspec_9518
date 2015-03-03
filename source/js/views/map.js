@@ -2,7 +2,7 @@ define([
     'lib/news_special/bootstrap',
     'backbone',
     'd3',
-    'views/locator',
+    'views/locator'
 ], function (news, Backbone, d3, LocatorView) {
     return Backbone.View.extend({
         className: 'main-map--container',
@@ -59,7 +59,8 @@ define([
             this.svg
                 .call(this.zoom)
                 .call(this.zoom.event)
-                .on('dblclick.zoom', null);
+                .on('dblclick.zoom', null)
+                .on('dblTap.zoom', null);
 
             if (this.mapModel.get('pulloutShetland') === true) {
                 this.pulloutShetland();
@@ -141,13 +142,20 @@ define([
                 translation = this.applyBounds(d3.event.translate, scale);
             
             this.setTranslationAndScale(translation, scale);
-            this.toggleShetland((scale <= this.initScale));   
+            
+            if (scale <= this.initScale) {
+                this.toggleShetland(true);
+                this.resetSelectedConstituency();
+                news.pubsub.emit('panel:hide');
+            } else {
+                this.toggleShetland(false);
+            }
 
             var _this = this;
             clearTimeout(this.panningTimeout);
             this.panningTimeout = setTimeout(function () {
                 _this.isPanningOrZoom = false;            
-            }.bind(this), 300);
+            }.bind(this), 150);
         },
         handleConstituencyClick: function (d, node){
             if (!this.isPanningOrZoom && d.properties.constituency_name) {
@@ -160,17 +168,30 @@ define([
                     scale = this.mapModel.get('scale');
                     centroid = this.mapModel.get('center');
                     translation = this.getTranslationFromCentroid(centroid, scale);
+                    news.pubsub.emit('panel:hide');
+                    this.resetSelectedConstituency();
                 }else{
                     var tAndS = this.getTranslationAndScaleFromFeature(d);
                     scale = tAndS.scale;
                     translation = tAndS.translation;
                     this.zoomedConstituency = d.properties.constituency_name;
-                    this.toggleShetland(false);                 
+                    this.toggleShetland(false);
+                    this.setSelectedConstituency(d.properties.constituency_name);
+                    news.pubsub.emit('panel:show', {
+                        constituency: d.properties.constituency_name
+                    });         
                 }
 
                 this.setTranslationAndScale(translation, scale, true);
 
             }
+        },
+        setSelectedConstituency: function (gssid) {
+            this.resetSelectedConstituency();
+            this.group.select('[data-gssid="' + gssid + '"]').attr('class', 'constituency-path constituency-path__selected');
+        },
+        resetSelectedConstituency: function () {
+            this.$el.find('.constituency-path__selected').attr('class', 'constituency-path');
         },
         getDataGssIdFrom: function (feature) {
             return feature.properties.constituency_name? feature.properties.constituency_name : 'outline';
@@ -269,6 +290,8 @@ define([
                 translation = this.getTranslationFromCentroid(centroid, scale);
 
             this.setTranslationAndScale(translation, scale, true);
+            this.resetSelectedConstituency();
+            news.pubsub.emit('panel:hide');
         },
         pan: function (direction) {
             var translation = this.translation;
@@ -317,6 +340,9 @@ define([
             this.setTranslationAndScale(this.applyBounds(translation, scale), scale, true);
             if(scale > this.initScale) {
                 this.toggleShetland(false);
+            } else {
+                this.resetSelectedConstituency();
+                news.pubsub.emit('panel:hide');
             }
         }
     });

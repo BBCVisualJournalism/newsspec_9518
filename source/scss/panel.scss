@@ -1,0 +1,32 @@
+$panelHeight: 56px;
+
+.map-panel{
+	position: absolute;
+	bottom: -($panelHeight);
+	left: 0;
+	right: 0;
+	height: $panelHeight;
+	background-color: rgba(0,0,0,.65);
+	padding: 8px 0 0 10px;
+
+	.panel-title{
+		display: block;
+		font: bold 14px Arial;
+		color: #FFF;
+		text-decoration: none;
+
+		.panel--arrow{
+			color: #bd2920;
+		}
+
+		&:hover{
+			text-decoration: underline;
+		}
+	}
+	.panel-message{
+		margin-top: 5px;
+		display: block;
+		font: 14px Arial;
+		color: #FFF;
+	}
+}

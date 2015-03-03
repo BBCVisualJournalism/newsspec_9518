@@ -3,7 +3,8 @@ define([
     'backbone',
     'views/map',
     'views/controls',
-], function (news, Backbone, MapView, ControlsView) {
+    'views/panel'
+], function (news, Backbone, MapView, ControlsView, PanelView) {
     return Backbone.View.extend({
         className: 'map-wrapper',
         initialize: function (options) {
@@ -13,7 +14,8 @@ define([
         render: function () {
             this.$el.append(
                 this.getMap(),
-                this.getControls()
+                this.getControls(),
+                this.getPanel()
             );
             return this.$el;
         },
@@ -22,6 +24,9 @@ define([
         },
         getControls: function () {
             return new ControlsView().render();
+        },
+        getPanel: function () {
+            return new PanelView().render();
         }
     });
 });

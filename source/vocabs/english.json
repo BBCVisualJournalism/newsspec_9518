@@ -1,3 +1,9 @@
 {
-    "language": "english"
+    "language": "english",
+    "controls_reset": "Reset",
+    "controls_up": "Up",
+    "controls_down": "Down",
+    "controls_left": "Left",
+    "controls_right": "Right",
+    "": "West"
 }

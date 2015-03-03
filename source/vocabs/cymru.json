@@ -1,3 +1,9 @@
 {
-    "language": "cymru"
+    "language": "cymru",
+    "controls_reset": "Ailosod",
+    "controls_up": "I fyny",
+    "controls_down": "I lawr",
+    "controls_left": "Chwith",
+    "controls_right": "Dde",
+    "": "Gorllewin"
 }
