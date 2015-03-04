@@ -1,8 +1,11 @@
 define(['lib/news_special/bootstrap', 'lib/vendors/d3/topojson', 'backbone', 'models/map', 'views/mapWrapper', 'text!maps/wales.topojson'], function (news, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson) {
 
+    var isResultsMode = (iframeManager.getValueFromQueryString('isResultsMode').toLowerCase() === 'true');
+    
     mapTopoJson = JSON.parse(mapTopoJson);
 
     var mapConfig = {
+        'isResultsMode': isResultsMode,
         'translate': [75, 372],
         'mapScale': 465,
         'maxScaleOut': 4,

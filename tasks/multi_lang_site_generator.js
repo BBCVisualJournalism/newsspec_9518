@@ -7,10 +7,10 @@ module.exports = function (grunt) {
 
     var projectFiles = {
         'index.html': 'index.html.tmpl',
-        'index.inc':  'index.inc.tmpl',
-        'map_campaign.inc':  'index.inc.tmpl',
-        'map_results.inc':  'index.inc.tmpl',
-        'test.html':  'test.html.tmpl'
+        'map_campaign.inc':  'map_campaign.inc.tmpl',
+        'map_results.inc':  'map_results.inc.tmpl',
+        'test_campaign.html':  'test_campaign.html.tmpl',
+        'test_results.html':  'test_results.html.tmpl'
     };
 
     // *************************************************************************

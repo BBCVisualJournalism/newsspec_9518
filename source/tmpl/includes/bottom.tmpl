@@ -35,6 +35,13 @@ if (scaffoldLite) {
             document.body.appendChild(script);
         }
 
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
         function setDebugMode() {
             var debugForced = window.location.href.match(/debug=true/);
             if (debugForced) {

@@ -87,20 +87,21 @@ define([
             return [((this.width /2) - (centroid[0] * scale)), ((this.height /2) - (centroid[1] * scale))]
         },
         positionMap: function () {
-            var gssidCenter = this.mapModel.get('gssid'),
+            var gssid = this.mapModel.get('gssid'),
                 centroid = this.mapModel.get('center'),
                 scale = this.mapModel.get('scale');
 
             var translation;
 
-            if (gssidCenter) {
+            if (gssid) {
                 // Center to GSSID.
-                var feature = this.getFeatureFromGssid(gssidCenter),
+                var feature = this.getFeatureFromGssid(gssid),
                     tAndS = this.getTranslationAndScaleFromFeature(feature);
 
                 translation = tAndS.translation;
                 scale = tAndS.scale;
                 this.zoomedConstituency = feature.properties.constituency_name;
+                this.setSelectedConstituency(gssid);
             } else if (centroid && scale) {
                 //Center to nation
                 translation = this.getTranslationFromCentroid(centroid, scale);

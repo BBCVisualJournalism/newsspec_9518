@@ -9,7 +9,8 @@
 		font-family: Arial, sans-serif;
 		color: #fff;
 		font-size: 13px;
-		padding: 5px 8px;
+		padding: 5px 0;
+		text-align: center;
 		border: 0;
 		background-color: rgba(0, 0, 0, 0.74902);
 		text-decoration: none;
@@ -18,7 +19,6 @@
 		height: 24px;
 		margin-bottom: 1px;
 		outline: 0;
-		padding: 0;
 	}
 
 	.map-controls--reset:hover{

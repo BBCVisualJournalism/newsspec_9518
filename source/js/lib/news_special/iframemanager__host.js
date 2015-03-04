@@ -2,6 +2,10 @@
 
     var IframeWatcher = function () {
         var self = this;
+        /* RESULTS MODE CONFIG */
+        this.isResultsMode       = '<%= isResultsMode %>';
+        /* RESULTS MODE CONFIG END */
+
         this.linkId       = '<%= iframeUid %>';
         this.scaffoldLite = '<%= scaffoldLite %>';
         this.initIstatsIfRequiredThen(function () {
@@ -38,10 +42,12 @@
         createIframe: function () {
 
             var linkId        = this.linkId,
-                href          = '<%= path %>/<%= vocab_dir %>/index.html?v=<%= version %>',
+                href          = '<%= path %>/<%= vocab_dir %>/index.html?v=<%= version %>&isResultsMode=' + this.isResultsMode,
                 iframeWatcher = this,
                 hostId        = this.getWindowLocationOrigin(),
-                urlParams     = window.location.hash || '',
+                route         = this.getQueryStringValue('route'),
+                qsRouteHash   = (route) ? '#' + route : null,
+                urlParams     = qsRouteHash || window.location.hash || '',
                 hostUrl       = encodeURI(window.location.href.replace(urlParams, '')),
                 onBBC         = this.onBbcDomain(),
                 container     = document.getElementById('<%= iframeUid %>-container');
@@ -198,7 +204,7 @@
 
         getQueryStringValue: function (name) {
             var queryString = '<!--#echo var="QUERY_STRING" -->',
-                regex       = new RegExp('(?:[\\?&]|&amp;)' + name + '=([^&#]*)'),
+                regex       = new RegExp('(?:[\\?&]|&amp;)?' + name + '=([^&#]*)'),
                 results     = regex.exec(queryString);
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         },
