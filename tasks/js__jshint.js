@@ -18,6 +18,6 @@ module.exports = function (grunt) {
             force:    true,
             ignores: ['source/js/lib/news_special/template_engine.js']
         },
-        all: ['Gruntfile.js', 'source/js/lib/news_special/*.js', 'source/js/*.js', 'source/js/spec/*.js']
+        all: ['Gruntfile.js', 'source/js/lib/news_special/*.js', 'source/js/*.js', 'source/js/views/*.js', 'source/js/models/*.js', 'source/js/spec/*.js']
     });
 };

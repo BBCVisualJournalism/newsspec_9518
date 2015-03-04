@@ -67,13 +67,13 @@ define([
         zoomBoxUpdate: function (zoomBox, scale, animate) {
             var _this = this;
 
-            var x =(zoomBox.left / 5) , 
+            var x = (zoomBox.left / 5),
                 y = (zoomBox.top / 5),
                 width = (zoomBox.right / 5) - x,
                 height = (zoomBox.bottom / 5) - y;
 
             /* Check if box to small, if it is enlarge around center*/
-            if(width < 14 || height < 14) {
+            if (width < 14 || height < 14) {
                 x -= ((14 - width) / 2);
                 y -= ((14 - height) / 2);
                 width = 14;
@@ -83,7 +83,7 @@ define([
             var locatorEl = this.svg.select('.locator-box');
             var willHide = (scale <= this.mapModel.get('scale'));
 
-            if(!willHide) {
+            if (!willHide) {
                 this.$el.show();
             }
             
@@ -91,14 +91,14 @@ define([
                 'x' : x,
                 'y' : y,
                 'width' : width,
-                'height' : height,
+                'height' : height
             };
 
             if (animate) {
                 locatorEl.transition()
                     .attr(attr)
                     .duration(1000)
-                .each("end", function() {
+                .each('end', function () {
                     if (willHide) {
                         _this.$el.fadeOut();
                         news.pubsub.emit('map:toggleShetland', true);

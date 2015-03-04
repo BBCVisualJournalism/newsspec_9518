@@ -5,7 +5,7 @@ define([
     return Backbone.View.extend({
         className: 'map-panel',
         initialize: function () {
-            this.template = _.template( $("#panel_template").html(), {} );
+            this.template = _.template($('#panel_template').html(), {});
             this.visible = false;
 
             news.pubsub.on('panel:show', this.show.bind(this));

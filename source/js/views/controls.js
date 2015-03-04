@@ -5,7 +5,7 @@ define([
     return Backbone.View.extend({
         className: 'map-controls',
         initialize: function () {
-            this.template = _.template( $("#map_controls_template").html(), {} );
+            this.template = _.template($('#map_controls_template').html(), {});
         },
         render: function () {
             this.$el.html(this.template);
@@ -17,9 +17,9 @@ define([
             this.$el.find('.map-controls-pan__left').on('click', this.panClicked.bind(null, 'left'));
             this.$el.find('.map-controls-pan__up').on('click', this.panClicked.bind(null, 'up'));
             this.$el.find('.map-controls-pan__right').on('click', this.panClicked.bind(null, 'right'));
-            this.$el.find('.map-controls-pan__down').on('click', this.panClicked.bind(null, 'down'));            
-            this.$el.find('.map-controls--zoom-in').on('click', this.zoomClicked.bind(null, 'in'));            
-            this.$el.find('.map-controls--zoom-out').on('click', this.zoomClicked.bind(null, 'out'));            
+            this.$el.find('.map-controls-pan__down').on('click', this.panClicked.bind(null, 'down'));
+            this.$el.find('.map-controls--zoom-in').on('click', this.zoomClicked.bind(null, 'in'));
+            this.$el.find('.map-controls--zoom-out').on('click', this.zoomClicked.bind(null, 'out'));
         },
         resetClicked: function () {
             news.pubsub.emit('map:reset');
