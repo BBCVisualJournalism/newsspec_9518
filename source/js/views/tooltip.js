@@ -20,7 +20,7 @@ define([
             return this.$el;
         },
         show: function (data) {
-            var constText = data.properties.constituency_name;
+            var constText = data.properties.constituency_gssid;
             if (this.constText !== constText) {
                 this.$el.text(constText);
                 this.elWidth = this.$el.width();
@@ -30,8 +30,8 @@ define([
 
             var mouseLeft = d3.event.pageX - news.$('.map-wrapper').offset().left,
                 mouseTop = d3.event.pageY - news.$('.map-wrapper').offset().top,
-                left = (mouseLeft < (this.mapWidth / 2)) ? mouseLeft + 10 : mouseLeft - this.elWidth - 30,
-                top = (mouseTop < (this.mapHeight / 2)) ? mouseTop + 20 : mouseTop - this.elHeight - 20;
+                left = (mouseLeft < (this.mapWidth / 2)) ? mouseLeft + 20 : mouseLeft - this.elWidth - 40,
+                top = (mouseTop < (this.mapHeight / 2)) ? mouseTop + 30 : mouseTop - this.elHeight - 30;
 
             this.$el.css({'left' : left + 'px', 'top' : top + 'px'});
 

@@ -16,7 +16,8 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
         'repIreland': false,
         'locator': true,
         'scale': 4,
-        'center': [170, 273]
+        'center': [170, 273],
+        'tooltip': true
     };
 
     var Router = Backbone.Router.extend({

@@ -53,7 +53,7 @@ define([
                 .data(this.features)
                 .enter().append('path')
                 .attr('class', function (d) {
-                    return (d.properties.constituency_name) ? 'constituency-path' : 'outline-path';
+                    return (d.properties.constituency_gssid) ? 'constituency-path' : 'outline-path';
                 })
                 .attr('data-gssid', this.getDataGssIdFrom)
                 .attr('d', this.path)
@@ -102,7 +102,7 @@ define([
                 var tAndS = this.getTranslationAndScaleFromFeature(feature);
                 translation = tAndS.translation;
                 scale = tAndS.scale;
-                this.currentSelectedConstituency = feature.properties.constituency_name;
+                this.currentSelectedConstituency = feature.properties.constituency_gssid;
                 this.setSelectedConstituency(gssid);
                 this.toggleShetland((scale <= this.initScale));
             } else if (centroid && scale) {
@@ -117,7 +117,7 @@ define([
         getFeatureFromGssid: function (gssid) {
             var returnFeature = null;
             _.every(this.features, function (feature) {
-                if (feature.properties.constituency_name === gssid) {
+                if (feature.properties.constituency_gssid === gssid) {
                     returnFeature = feature;
                     return false;
                 }
@@ -162,12 +162,12 @@ define([
             }.bind(this), 150);
         },
         handleConstituencyClick: function (d, node) {
-            if (!this.isPanningOrZoom && d.properties.constituency_name) {
+            if (!this.isPanningOrZoom && d.properties.constituency_gssid) {
 
                 var scale, translation;
 
                 // If already zoomed into what user clicked, zoom out.
-                if (this.currentSelectedConstituency && this.currentSelectedConstituency === d.properties.constituency_name) {
+                if (this.currentSelectedConstituency && this.currentSelectedConstituency === d.properties.constituency_gssid) {
                     this.currentSelectedConstituency = null;
                     scale = this.mapModel.get('scale');
                     centroid = this.mapModel.get('center');
@@ -178,13 +178,13 @@ define([
                     var tAndS = this.getTranslationAndScaleFromFeature(d);
                     scale = tAndS.scale;
                     translation = tAndS.translation;
-                    this.currentSelectedConstituency = d.properties.constituency_name;
+                    this.currentSelectedConstituency = d.properties.constituency_gssid;
                     this.toggleShetland(false);
-                    this.setSelectedConstituency(d.properties.constituency_name);
+                    this.setSelectedConstituency(d.properties.constituency_gssid);
                     news.pubsub.emit('tooltip:hide');
                     news.pubsub.emit('panel:show', {
-                        gssid: d.properties.constituency_name,
-                        constituency: d.properties.constituency_name
+                        gssid: d.properties.constituency_gssid,
+                        constituency: d.properties.constituency_gssid
                     });
                 }
 
@@ -200,7 +200,7 @@ define([
             this.$el.find('.constituency-path__selected').attr('class', 'constituency-path');
         },
         getDataGssIdFrom: function (feature) {
-            return feature.properties.constituency_name ? feature.properties.constituency_name : 'outline';
+            return feature.properties.constituency_gssid ? feature.properties.constituency_gssid : 'outline';
         },
         loadLocator: function () {
             if (this.mapModel.get('locator') === true) {
@@ -289,7 +289,7 @@ define([
 
                 translation = tAndS.translation;
                 scale = tAndS.scale;
-                this.currentSelectedConstituency = feature.properties.constituency_name;
+                this.currentSelectedConstituency = feature.properties.constituency_gssid;
                 this.setSelectedConstituency(gssid);
             } else {
                 var  centroid = this.mapModel.get('center');
@@ -353,8 +353,8 @@ define([
             }
         },
         mouseOverPath: function (map, d) {
-            if (map.tooltipEnabled === true) {
-                if (map.currentSelectedConstituency !== d.properties.constituency_name) {
+            if (map.tooltipEnabled === true && d.properties.constituency_gssid) {
+                if (map.currentSelectedConstituency !== d.properties.constituency_gssid) {
                     news.pubsub.emit('tooltip:show', [d]);
                 } else {
                     news.pubsub.emit('tooltip:hide');
