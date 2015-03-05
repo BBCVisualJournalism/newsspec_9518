@@ -13,12 +13,15 @@ define([
         },
         render: function () {
             this.$el.html(this.template);
-            this.constituencyTitle = this.$el.find('.panel-title__constituency');
+            this.constituencyLink = this.$el.find('.panel-title');
+            this.constituencyName = this.constituencyLink.find('.panel-title__constituency');
+            this.urlFormat = this.constituencyLink.data('url');
 
             return this.$el;
         },
         show: function (options) {
-            this.constituencyTitle.text(options.constituency);
+            this.constituencyName.text(options.constituency);
+            this.constituencyLink.attr('href', this.urlFormat.replace('{GSSID}', options.gssid));
             
             if (!this.visible) {
                 this.visible = true;

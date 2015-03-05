@@ -5,5 +5,6 @@
     "controls_down": "Down",
     "controls_left": "Left",
     "controls_right": "Right",
-    "": "West"
+    "": "West",
+    "panel_url": "/news/politics/constituencies/{GSSID}"
 }

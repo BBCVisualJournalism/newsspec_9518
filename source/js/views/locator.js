@@ -81,7 +81,7 @@ define([
             }
 
             var locatorEl = this.svg.select('.locator-box');
-            var willHide = (scale <= this.mapModel.get('scale'));
+            var willHide = (scale <= this.mapModel.get('maxScaleOut'));
 
             if (!willHide) {
                 this.$el.show();

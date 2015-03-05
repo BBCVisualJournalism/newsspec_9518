@@ -22,7 +22,7 @@ define([
         initMap: function () {
             this.width = 375;
             this.height = 420;
-            this.initScale = this.mapModel.get('scale');
+            this.initScale = this.mapModel.get('maxScaleOut');
             this.bounds = this.mapModel.get('bounds');
 
             this.projection = d3.geo.mercator()
@@ -87,19 +87,19 @@ define([
         positionMap: function () {
             var gssid = this.mapModel.get('gssid'),
                 centroid = this.mapModel.get('center'),
-                scale = this.mapModel.get('scale');
+                scale = this.mapModel.get('scale'),
+                feature;
 
             var translation;
 
-            if (gssid) {
+            if (gssid && (feature = this.getFeatureFromGssid(gssid))) {
                 // Center to GSSID.
-                var feature = this.getFeatureFromGssid(gssid),
-                    tAndS = this.getTranslationAndScaleFromFeature(feature);
-
+                var tAndS = this.getTranslationAndScaleFromFeature(feature);
                 translation = tAndS.translation;
                 scale = tAndS.scale;
                 this.zoomedConstituency = feature.properties.constituency_name;
                 this.setSelectedConstituency(gssid);
+                this.toggleShetland((scale <= this.initScale));
             } else if (centroid && scale) {
                 //Center to nation
                 translation = this.getTranslationFromCentroid(centroid, scale);
@@ -177,6 +177,7 @@ define([
                     this.toggleShetland(false);
                     this.setSelectedConstituency(d.properties.constituency_name);
                     news.pubsub.emit('panel:show', {
+                        gssid: d.properties.constituency_name,
                         constituency: d.properties.constituency_name
                     });
                 }

@@ -1,14 +1,17 @@
 define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', 'lib/vendors/d3/topojson', 'backbone', 'models/map', 'views/mapWrapper', 'text!maps/uk.topojson'], function (news, iframeManager, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson) {
 
     var isResultsMode = (iframeManager.getValueFromQueryString('isResultsMode').toLowerCase() === 'true');
-    
+
     mapTopoJson = JSON.parse(mapTopoJson);
 
     var mapConfig = {
         'isResultsMode': isResultsMode,
         'translate': [75, 372],
         'mapScale': 465,
-        'bounds': [[-100, -300], [475, 475]]
+        'bounds': [[-100, -300], [475, 475]],
+        'pulloutShetland': true,
+        'repIreland': true,
+        'locator': true
     };
 
     var Router = Backbone.Router.extend({
@@ -19,12 +22,7 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
         },
 
         ukMap: function () {
-            var ukMapConfig = {
-                'pulloutShetland': true,
-                'repIreland': true,
-                'locator': true
-            };
-            this.loadMap(_.extend(mapConfig, ukMapConfig));
+            this.loadMap(mapConfig);
         },
         nation: function (nation) {
             var nationInfo;
@@ -32,25 +30,29 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
             case 'england':
                 nationInfo = {
                     'scale': 1.55,
-                    'center': [220, 257]
+                    'center': [220, 257],
+                    'pulloutShetland': false
                 };
                 break;
             case 'northernIreland':
                 nationInfo = {
                     'scale': 5.5,
-                    'center': [110, 180]
+                    'center': [110, 180],
+                    'pulloutShetland': false
                 };
                 break;
             case 'scotland':
                 nationInfo = {
                     'scale': 1.2,
-                    'center': [180, 30]
+                    'center': [180, 30],
+                    'pulloutShetland': false
                 };
                 break;
             case 'wales':
                 nationInfo = {
                     'scale': 4,
-                    'center': [181, 273]
+                    'center': [181, 273],
+                    'pulloutShetland': false
                 };
                 break;
             }

@@ -1,7 +1,7 @@
-define(['lib/news_special/bootstrap', 'lib/vendors/d3/topojson', 'backbone', 'models/map', 'views/mapWrapper', 'text!maps/wales.topojson'], function (news, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson) {
+define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', 'lib/vendors/d3/topojson', 'backbone', 'models/map', 'views/mapWrapper', 'text!maps/wales.topojson'], function (news, iframeManager, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson) {
 
     var isResultsMode = (iframeManager.getValueFromQueryString('isResultsMode').toLowerCase() === 'true');
-    
+
     mapTopoJson = JSON.parse(mapTopoJson);
 
     var mapConfig = {
