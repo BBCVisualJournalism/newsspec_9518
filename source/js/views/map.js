@@ -9,6 +9,9 @@ define([
         initialize: function (options) {
             this.mapModel = options.mapModel;
             this.features = this.mapModel.get('features');
+            this.width = this.mapModel.get('width');
+            this.height = this.mapModel.get('height');
+            
             this.d3El = d3.select(this.el);
 
             this.initMap();
@@ -20,10 +23,10 @@ define([
             news.pubsub.on('map:zoomClicked', this.zoomClicked.bind(this));
         },
         initMap: function () {
-            this.width = 375;
-            this.height = 420;
+
             this.initScale = this.mapModel.get('maxScaleOut');
             this.bounds = this.mapModel.get('bounds');
+            this.tooltipEnabled = this.mapModel.get('tooltip');
 
             this.projection = d3.geo.mercator()
                 .scale(this.mapModel.get('mapScale'))
@@ -33,7 +36,7 @@ define([
                 .projection(this.projection);
 
             this.zoom = d3.behavior.zoom()
-                .scaleExtent([this.mapModel.get('maxScaleOut'), Infinity])
+                .scaleExtent([this.mapModel.get('maxScaleOut'), 200])
               .on('zoom', this.zoomHandler.bind(this));
 
             this.svg = d3.select(this.el)
@@ -54,7 +57,9 @@ define([
                 })
                 .attr('data-gssid', this.getDataGssIdFrom)
                 .attr('d', this.path)
-                .on('click', _.debounce(this.handleConstituencyClick.bind(this), 350, true));
+                .on('click', _.debounce(this.handleConstituencyClick.bind(this), 350, true))
+                .on('mousemove', this.mouseOverPath.bind(null, this))
+                .on('mouseout', this.mouseOutPath.bind(this));
             
             this.svg
                 .call(this.zoom)
@@ -97,7 +102,7 @@ define([
                 var tAndS = this.getTranslationAndScaleFromFeature(feature);
                 translation = tAndS.translation;
                 scale = tAndS.scale;
-                this.zoomedConstituency = feature.properties.constituency_name;
+                this.currentSelectedConstituency = feature.properties.constituency_name;
                 this.setSelectedConstituency(gssid);
                 this.toggleShetland((scale <= this.initScale));
             } else if (centroid && scale) {
@@ -162,8 +167,8 @@ define([
                 var scale, translation;
 
                 // If already zoomed into what user clicked, zoom out.
-                if (this.zoomedConstituency && this.zoomedConstituency === d.properties.constituency_name) {
-                    this.zoomedConstituency = null;
+                if (this.currentSelectedConstituency && this.currentSelectedConstituency === d.properties.constituency_name) {
+                    this.currentSelectedConstituency = null;
                     scale = this.mapModel.get('scale');
                     centroid = this.mapModel.get('center');
                     translation = this.getTranslationFromCentroid(centroid, scale);
@@ -173,9 +178,10 @@ define([
                     var tAndS = this.getTranslationAndScaleFromFeature(d);
                     scale = tAndS.scale;
                     translation = tAndS.translation;
-                    this.zoomedConstituency = d.properties.constituency_name;
+                    this.currentSelectedConstituency = d.properties.constituency_name;
                     this.toggleShetland(false);
                     this.setSelectedConstituency(d.properties.constituency_name);
+                    news.pubsub.emit('tooltip:hide');
                     news.pubsub.emit('panel:show', {
                         gssid: d.properties.constituency_name,
                         constituency: d.properties.constituency_name
@@ -221,9 +227,9 @@ define([
                     'height': 146
                 });
 
-            this.shetlandGroup = this.shetlandPullout.append('g');
-
             var shetlandsPath = this.group.select('[data-gssid="S14000051"]');
+
+            this.shetlandGroup = this.shetlandPullout.append('g');
 
             this.shetlandGroup.append('path')
                 .attr('class', 'constituency-path')
@@ -236,6 +242,10 @@ define([
             });
 
             this.shetlandGroup.attr('transform', 'translate(-175, 135)');
+
+            this.shetlandPullout
+                .on('mousemove', this.mouseOverPath.bind(null, this, shetlandsPath.datum()))
+                .on('mouseout', this.mouseOutPath.bind(this));
         },
         toggleShetland: function (show) {
             if (this.shetlandPullout && this.shetlandShown !== show) {
@@ -279,7 +289,7 @@ define([
 
                 translation = tAndS.translation;
                 scale = tAndS.scale;
-                this.zoomedConstituency = feature.properties.constituency_name;
+                this.currentSelectedConstituency = feature.properties.constituency_name;
                 this.setSelectedConstituency(gssid);
             } else {
                 var  centroid = this.mapModel.get('center');
@@ -340,6 +350,20 @@ define([
             } else {
                 this.resetSelectedConstituency();
                 news.pubsub.emit('panel:hide');
+            }
+        },
+        mouseOverPath: function (map, d) {
+            if (map.tooltipEnabled === true) {
+                if (map.currentSelectedConstituency !== d.properties.constituency_name) {
+                    news.pubsub.emit('tooltip:show', [d]);
+                } else {
+                    news.pubsub.emit('tooltip:hide');
+                }
+            }
+        },
+        mouseOutPath: function () {
+            if (this.tooltipEnabled === true) {
+                news.pubsub.emit('tooltip:hide');
             }
         }
     });
