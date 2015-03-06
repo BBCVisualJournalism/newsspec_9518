@@ -16,7 +16,6 @@ define([
 
             news.pubsub.on('tooltip:show', this.show.bind(this));
             news.pubsub.on('tooltip:hide', this.hide.bind(this));
-            news.pubsub.on('tooltip:timeoutShow', this.timeoutShow.bind(this));
         },
         render: function () {
             return this.$el;
@@ -49,14 +48,6 @@ define([
                 this.visible = false;
                 this.$el.hide();
             }
-        },
-        /* STUPID IPHONES FIRE THE MOUSEMOVE EVENT WHEN CLICKING, SO THE TOOLTIP OPENS. IT ALSO SENDS THE EVENT AFTER THE CLICK EVENT, SO WE HAVE TO TIMEOUT..... */
-        timeoutShow: function (time) {
-            this.timeout = true;
-            var _this = this;
-            setTimeout(function () {
-                _this.timeout = false;
-            }, time);
         }
     });
 });

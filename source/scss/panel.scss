@@ -3,6 +3,7 @@ $panelHeight: 56px;
 .map-panel{
 	position: absolute;
 	bottom: -($panelHeight);
+	transition: bottom 0.5s;
 	left: 0;
 	right: 0;
 	height: $panelHeight;

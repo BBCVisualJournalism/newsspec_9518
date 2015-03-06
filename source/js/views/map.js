@@ -54,8 +54,6 @@ define([
             this.group = this.svg.append('g');
         },
         render: function () {
-            var clickListener = (this.isInteractive) ? _.debounce(this.handleConstituencyClick.bind(this), 350, true) : null;
-
             this.group
                 .selectAll('path')
                 .data(this.features)
@@ -67,7 +65,7 @@ define([
                 .attr('d', this.path)
                 .on('mousemove', (!this.isTouchDevice) ? this.mouseOverPath.bind(null, this) : null)
                 .on('mouseout', (!this.isTouchDevice) ? this.mouseOutPath.bind(null, this) : null)
-                .on('click', clickListener);
+                .on('click', (this.isInteractive) ? _.debounce(this.handleConstituencyClick.bind(this), 350, true) : null);
 
             if (this.isInteractive) {
                 this.svg
@@ -192,15 +190,17 @@ define([
                     this.currentSelectedConstituency = d.properties.constituency_gssid;
                     this.toggleShetland(false);
                     this.setSelectedConstituency(d.properties.constituency_gssid);
-                    news.pubsub.emit('panel:show', {
-                        gssid: d.properties.constituency_gssid,
-                        constituency: d.properties.constituency_gssid
-                    });
+
+                    setTimeout(function () {
+                        news.pubsub.emit('panel:show', {
+                            gssid: d.properties.constituency_gssid,
+                            constituency: d.properties.constituency_gssid
+                        });
+                    }, 800);
+
                 }
 
-
                 news.pubsub.emit('tooltip:hide');
-                news.pubsub.emit('tooltip:timeoutShow', 700);
 
                 this.setTranslationAndScale(translation, scale, true);
             }

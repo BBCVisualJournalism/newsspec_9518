@@ -26,9 +26,7 @@ define([
             if (!this.visible) {
                 this.visible = true;
 
-                this.$el.animate({
-                    'bottom': 0
-                }, 600);
+                this.$el.css('bottom', 0);
             }
         },
         hide: function () {
@@ -36,9 +34,7 @@ define([
                 this.visible = false;
 
                 var height = this.$el.css('height');
-                this.$el.animate({
-                    'bottom': '-' + height
-                }, 400);
+                this.$el.css('bottom', '-' + height);
 
             }
         }
