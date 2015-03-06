@@ -8,6 +8,7 @@ define([
         className: 'main-map--container',
         initialize: function (options) {
             this.mapModel = options.mapModel;
+            this.isInteractive = this.mapModel.get('interactive');
             this.features = this.mapModel.get('features');
             this.width = this.mapModel.get('width');
             this.height = this.mapModel.get('height');
@@ -16,11 +17,13 @@ define([
 
             this.initMap();
 
-            /* LISTENERS */
-            news.pubsub.on('map:toggleShetland', this.toggleShetland.bind(this));
-            news.pubsub.on('map:reset', this.reset.bind(this));
-            news.pubsub.on('map:pan', this.pan.bind(this));
-            news.pubsub.on('map:zoomClicked', this.zoomClicked.bind(this));
+            if (this.isInteractive) {
+                /* LISTENERS */
+                news.pubsub.on('map:toggleShetland', this.toggleShetland.bind(this));
+                news.pubsub.on('map:reset', this.reset.bind(this));
+                news.pubsub.on('map:pan', this.pan.bind(this));
+                news.pubsub.on('map:zoomClicked', this.zoomClicked.bind(this));
+            }
         },
         initMap: function () {
 
@@ -35,9 +38,11 @@ define([
             this.path = d3.geo.path()
                 .projection(this.projection);
 
-            this.zoom = d3.behavior.zoom()
-                .scaleExtent([this.mapModel.get('maxScaleOut'), 200])
-              .on('zoom', this.zoomHandler.bind(this));
+            if (this.isInteractive) {
+                this.zoom = d3.behavior.zoom()
+                    .scaleExtent([this.mapModel.get('maxScaleOut'), 200])
+                  .on('zoom', this.zoomHandler.bind(this));
+            }
 
             this.svg = d3.select(this.el)
                 .append('svg')
@@ -48,7 +53,7 @@ define([
             this.group = this.svg.append('g');
         },
         render: function () {
-            var clickListener = _.debounce(this.handleConstituencyClick.bind(this), 350, true);
+            var clickListener = (this.isInteractive) ? _.debounce(this.handleConstituencyClick.bind(this), 350, true) : null;
 
             this.group
                 .selectAll('path')
@@ -64,12 +69,13 @@ define([
                 .on('touchend', clickListener)
                 .on('click', clickListener);
 
-            
-            this.svg
-                .call(this.zoom)
-                .call(this.zoom.event)
-                .on('dblclick.zoom', null)
-                .on('dblTap.zoom', null);
+            if (this.isInteractive) {
+                this.svg
+                    .call(this.zoom)
+                    .call(this.zoom.event)
+                    .on('dblclick.zoom', null)
+                    .on('dblTap.zoom', null);
+            }
 
             if (this.mapModel.get('pulloutShetland') === true) {
                 this.pulloutShetland();
@@ -359,7 +365,7 @@ define([
             }
         },
         mouseOverPath: function (map, d) {
-            if (map.tooltipEnabled === true && d.properties.constituency_gssid) {
+            if (map.tooltipEnabled === true && (this.isInteractive) && d.properties.constituency_gssid) {
                 if (map.currentSelectedConstituency !== d.properties.constituency_gssid) {
                     news.pubsub.emit('tooltip:show', [d]);
                 } else {
@@ -368,7 +374,7 @@ define([
             }
         },
         mouseOutPath: function () {
-            if (this.tooltipEnabled === true) {
+            if (this.tooltipEnabled === true && (this.isInteractive)) {
                 news.pubsub.emit('tooltip:hide');
             }
         }

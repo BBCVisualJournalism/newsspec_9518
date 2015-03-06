@@ -1,5 +1,7 @@
 define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', 'lib/vendors/d3/topojson', 'backbone', 'models/map', 'views/mapWrapper', 'text!maps/uk.topojson'], function (news, iframeManager, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson) {
-    var isResultsMode = (iframeManager.getValueFromQueryString('isResultsMode').toLowerCase() === 'true');
+    /* Values passed from parent on load. (Query string) */
+    var isResultsMode = (iframeManager.getValueFromQueryString('isResultsMode').toLowerCase() === 'true'),
+        parentWidth = iframeManager.getValueFromQueryString('parentWidth');
 
     mapTopoJson = JSON.parse(mapTopoJson);
 
@@ -13,7 +15,8 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
         'pulloutShetland': true,
         'repIreland': true,
         'locator': false,
-        'tooltip': true
+        'tooltip': true,
+        'interactive': (parentWidth > 700)
     };
 
     var Router = Backbone.Router.extend({

@@ -13,12 +13,16 @@ define([
             this.mapModel = options.mapModel;
         },
         render: function () {
-            this.$el.append(
-                this.getMap(),
-                this.getControls(),
-                this.getPanel(),
-                this.getTooltip()
-            );
+            if (this.mapModel.get('interactive')) {
+                this.$el.append(
+                    this.getMap(),
+                    this.getControls(),
+                    this.getPanel(),
+                    this.getTooltip()
+                );
+            } else {
+                this.$el.append(this.getMap());
+            }
             return this.$el;
         },
         getMap: function () {

@@ -50,6 +50,7 @@
                 urlParams     = qsRouteHash || window.location.hash || '',
                 hostUrl       = encodeURI(window.location.href.replace(urlParams, '')),
                 onBBC         = this.onBbcDomain(),
+                viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
                 container     = document.getElementById('<%= iframeUid %>-container');
             
             this.staticHeight = 600;
@@ -64,7 +65,7 @@
 
             this.decideHowToTalkToIframe(href);
 
-            this.elm.src = href + '&hostid=' + hostId.split('//')[1] + '&hostUrl=' + hostUrl + '&iframeUID=' + linkId + '&onbbcdomain=' + onBBC + urlParams;
+            this.elm.src = href + '&hostid=' + hostId.split('//')[1] + '&hostUrl=' + hostUrl + '&iframeUID=' + linkId + '&parentWidth=' + viewportWidth + '&onbbcdomain=' + onBBC + urlParams;
 
             container.appendChild(this.elm);
 
