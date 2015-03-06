@@ -48,6 +48,8 @@ define([
             this.group = this.svg.append('g');
         },
         render: function () {
+            var clickListener = _.debounce(this.handleConstituencyClick.bind(this), 350, true);
+
             this.group
                 .selectAll('path')
                 .data(this.features)
@@ -57,9 +59,11 @@ define([
                 })
                 .attr('data-gssid', this.getDataGssIdFrom)
                 .attr('d', this.path)
-                .on('click', _.debounce(this.handleConstituencyClick.bind(this), 350, true))
                 .on('mousemove', this.mouseOverPath.bind(null, this))
-                .on('mouseout', this.mouseOutPath.bind(this));
+                .on('mouseout', this.mouseOutPath.bind(this))
+                .on('touchend', clickListener)
+                .on('click', clickListener);
+
             
             this.svg
                 .call(this.zoom)
@@ -159,7 +163,7 @@ define([
             clearTimeout(this.panningTimeout);
             this.panningTimeout = setTimeout(function () {
                 _this.isPanningOrZoom = false;
-            }.bind(this), 150);
+            }.bind(this), 250);
         },
         handleConstituencyClick: function (d, node) {
             if (!this.isPanningOrZoom && d.properties.constituency_gssid) {
@@ -181,15 +185,17 @@ define([
                     this.currentSelectedConstituency = d.properties.constituency_gssid;
                     this.toggleShetland(false);
                     this.setSelectedConstituency(d.properties.constituency_gssid);
-                    news.pubsub.emit('tooltip:hide');
                     news.pubsub.emit('panel:show', {
                         gssid: d.properties.constituency_gssid,
                         constituency: d.properties.constituency_gssid
                     });
                 }
 
-                this.setTranslationAndScale(translation, scale, true);
 
+                news.pubsub.emit('tooltip:hide');
+                news.pubsub.emit('tooltip:timeoutShow', 700);
+
+                this.setTranslationAndScale(translation, scale, true);
             }
         },
         setSelectedConstituency: function (gssid) {

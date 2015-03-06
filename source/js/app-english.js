@@ -1,5 +1,4 @@
 define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', 'lib/vendors/d3/topojson', 'backbone', 'models/map', 'views/mapWrapper', 'text!maps/uk.topojson'], function (news, iframeManager, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson) {
-
     var isResultsMode = (iframeManager.getValueFromQueryString('isResultsMode').toLowerCase() === 'true');
 
     mapTopoJson = JSON.parse(mapTopoJson);
@@ -13,7 +12,7 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
         'bounds': [[-100, -300], [475, 475]],
         'pulloutShetland': true,
         'repIreland': true,
-        'locator': true,
+        'locator': false,
         'tooltip': true
     };
 
