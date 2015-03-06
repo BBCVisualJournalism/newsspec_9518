@@ -9,6 +9,7 @@ define([
         initialize: function (options) {
             this.mapModel = options.mapModel;
             this.isInteractive = this.mapModel.get('interactive');
+            this.isTouchDevice = this.isTouchDevice();
             this.features = this.mapModel.get('features');
             this.width = this.mapModel.get('width');
             this.height = this.mapModel.get('height');
@@ -64,9 +65,8 @@ define([
                 })
                 .attr('data-gssid', this.getDataGssIdFrom)
                 .attr('d', this.path)
-                .on('mousemove', this.mouseOverPath.bind(null, this))
-                .on('mouseout', this.mouseOutPath.bind(this))
-                .on('touchend', clickListener)
+                .on('mousemove', (!this.isTouchDevice) ? this.mouseOverPath.bind(null, this) : null)
+                .on('mouseout', (!this.isTouchDevice) ? this.mouseOutPath.bind(null, this) : null)
                 .on('click', clickListener);
 
             if (this.isInteractive) {
@@ -89,8 +89,9 @@ define([
         setTranslationAndScale: function (translation, scale, animated) {
             var group = (animated) ? this.group.transition().duration(1000) : this.group;
             group.attr('transform', 'translate(' + translation[0] + ',' + translation[1] + ') scale(' + scale + ')');
-            
-            this.zoom.translate([translation[0], translation[1]]).scale(scale);
+            if (this.isInteractive) {
+                this.zoom.translate([translation[0], translation[1]]).scale(scale);
+            }
             this.scale = scale;
             this.translation = translation;
 
@@ -256,8 +257,8 @@ define([
             this.shetlandGroup.attr('transform', 'translate(-175, 135)');
 
             this.shetlandPullout
-                .on('mousemove', this.mouseOverPath.bind(null, this, shetlandsPath.datum()))
-                .on('mouseout', this.mouseOutPath.bind(this));
+                .on('mousemove', (!this.isTouchDevice) ? this.mouseOverPath.bind(null, this, shetlandsPath.datum()) : null)
+                .on('mouseout', (!this.isTouchDevice) ? this.mouseOutPath.bind(null, this) : null);
         },
         toggleShetland: function (show) {
             if (this.shetlandPullout && this.shetlandShown !== show) {
@@ -365,7 +366,7 @@ define([
             }
         },
         mouseOverPath: function (map, d) {
-            if (map.tooltipEnabled === true && (this.isInteractive) && d.properties.constituency_gssid) {
+            if (map.tooltipEnabled === true && (map.isInteractive) && d.properties.constituency_gssid) {
                 if (map.currentSelectedConstituency !== d.properties.constituency_gssid) {
                     news.pubsub.emit('tooltip:show', [d]);
                 } else {
@@ -373,10 +374,13 @@ define([
                 }
             }
         },
-        mouseOutPath: function () {
-            if (this.tooltipEnabled === true && (this.isInteractive)) {
+        mouseOutPath: function (map) {
+            if (this.tooltipEnabled === true && (map.isInteractive)) {
                 news.pubsub.emit('tooltip:hide');
             }
+        },
+        isTouchDevice: function () {
+            return (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch);
         }
     });
 });

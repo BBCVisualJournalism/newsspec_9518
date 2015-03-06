@@ -14,7 +14,7 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
         'bounds': [[-100, -300], [475, 475]],
         'pulloutShetland': true,
         'repIreland': true,
-        'locator': false,
+        'locator': true,
         'tooltip': true,
         'interactive': (parentWidth > 700)
     };
