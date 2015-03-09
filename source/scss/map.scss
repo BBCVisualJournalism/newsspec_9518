@@ -51,8 +51,18 @@
 		.shetland--pullout:hover{
 			cursor: pointer;
 			.constituency-path{
-				fill-opacity: .6;
+				fill: #f2f1f1;
 			}
 		}
+	}
+}
+
+.non-interactive .main-map--svg{
+	.constituency-path, .shetland--pullout, .shetland--pullout .shetland-pullout--box{
+		cursor: initial;
+	}
+
+	.constituency-path:hover, .shetland--pullout .constituency-path, .shetland--pullout:hover .constituency-path{
+		fill: #fff;
 	}
 }

@@ -43,6 +43,8 @@ define([
                 this.zoom = d3.behavior.zoom()
                     .scaleExtent([this.mapModel.get('maxScaleOut'), 200])
                   .on('zoom', this.zoomHandler.bind(this));
+            } else {
+                this.$el.addClass('non-interactive');
             }
 
             this.svg = d3.select(this.el)
@@ -52,6 +54,7 @@ define([
                 .attr('viewBox', '0 0 ' + this.width + ' ' + this.height);
                 
             this.group = this.svg.append('g');
+
         },
         render: function () {
             this.group
@@ -222,13 +225,17 @@ define([
             }
         },
         pulloutShetland: function () {
+            var width = (this.width / 5) + 5,
+                height = width * 1.875;
+
             this.shetlandPullout = this.svg.append('svg')
                 .attr({
                     'class': 'shetland--pullout',
-                    'x': 288,
+                    'x': (this.width - width - 7),
                     'y': 7,
-                    'width': 81,
-                    'height': 150
+                    'width': width,
+                    'height': height,
+                    'viewBox': '0 0 ' + width + ' ' + height
                 });
 
             this.shetlandPullout.append('rect')
@@ -236,8 +243,8 @@ define([
                     'class': 'shetland-pullout--box',
                     'x': 2,
                     'y': 2,
-                    'width': 76,
-                    'height': 146
+                    'width': width - 4,
+                    'height': height - 4
                 });
 
             var shetlandsPath = this.group.select('[data-gssid="S14000051"]');
@@ -254,7 +261,7 @@ define([
                 shetlandsPath.on('click').call(shetlandsPath.node(), shetlandsPath.datum());
             });
 
-            this.shetlandGroup.attr('transform', 'translate(-175, 135)');
+            this.shetlandGroup.attr('transform', 'translate(-224, 337)');
 
             this.shetlandPullout
                 .on('mousemove', (!this.isTouchDevice) ? this.mouseOverPath.bind(null, this, shetlandsPath.datum()) : null)
@@ -339,10 +346,10 @@ define([
 
             switch (direction) {
             case 'in':
-                scaleFactor = 1.7;
+                scaleFactor = 2.2;
                 break;
             case 'out':
-                scaleFactor = 1 / 1.7;
+                scaleFactor = 1 / 2.2;
                 break;
             }
 
@@ -375,7 +382,7 @@ define([
             }
         },
         mouseOutPath: function (map) {
-            if (this.tooltipEnabled === true && (map.isInteractive)) {
+            if (map.tooltipEnabled === true && (map.isInteractive)) {
                 news.pubsub.emit('tooltip:hide');
             }
         },

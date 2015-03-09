@@ -6,11 +6,9 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
     mapTopoJson = JSON.parse(mapTopoJson);
 
     var mapConfig = {
-        'width': 375,
-        'height': 420,
         'isResultsMode': isResultsMode,
         'translate': [75, 372],
-        'mapScale': 465,
+        'mapScale': 660,
         'bounds': [[-100, -300], [475, 475]],
         'pulloutShetland': true,
         'repIreland': true,
