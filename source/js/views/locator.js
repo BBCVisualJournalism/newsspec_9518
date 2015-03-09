@@ -10,8 +10,8 @@ define([
             this.features = this.mapModel.get('features');
             this.d3El = d3.select(this.el);
 
-            this.width = 75;
-            this.height = 75;
+            this.width = this.mapModel.get('width') / 5;
+            this.height = this.mapModel.get('height') / 5;
 
             this.initMap();
 
@@ -30,17 +30,27 @@ define([
             this.path = d3.geo.path()
                 .projection(this.projection);
 
+            this.translation = this.getTranslationCentroid();
+
             this.svg = d3.select(this.el)
                 .append('svg')
                 .attr('class', 'locator-map--svg')
                 .attr('preserveAspectRatio', 'xMinYMin meet')
                 .attr('viewBox', '0 0 ' + this.width  + ' ' + this.height);
 
-            this.group = this.svg.append('g');
+            this.group = this.svg.append('g')
+                .attr('transform', 'translate(' + this.translation[0] + ',' + this.translation[1] + ')');
 
             this.addLocatorBox();
 
             this.scale = 1;
+        },
+        getTranslationCentroid: function () {
+            var centroid = this.mapModel.get('center');
+            return [
+                ((this.mapModel.get('width') / 2) - (centroid[0])) * 0.2,
+                ((this.mapModel.get('height') / 2) - (centroid[1])) * 0.2
+            ];
         },
         render: function () {
             this.group
@@ -88,8 +98,8 @@ define([
             }
             
             var attr = {
-                'x' : x,
-                'y' : y,
+                'x' : (x  + this.translation[0]),
+                'y' : (y  + this.translation[1]),
                 'width' : width,
                 'height' : height
             };

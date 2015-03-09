@@ -9,14 +9,14 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
     var mapConfig = {
         'isResultsMode': isResultsMode,
         'translate': [75, 372],
-        'mapScale': 465,
+        'mapScale': 650,
         'maxScaleOut': 4,
-        'bounds': [[110, 213], [230, 333]],
+        'bounds': [[125, 156], [285, 316]],
         'pulloutShetland': false,
         'repIreland': false,
-        'locator': true,
+        'locator': false,
         'scale': 4,
-        'center': [170, 273],
+        'center': [205, 236],
         'tooltip': true,
         'interactive': (parentWidth > 700)
     };
