@@ -1,4 +1,7 @@
 .locator-map--container{
+	-webkit-transform: translateZ(0);
+	-webkit-perspective: 1000;
+	-webkit-backface-visibility: hidden;
 	display: none;
 	float: right;
 	box-sizing: initial;

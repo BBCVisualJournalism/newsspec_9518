@@ -9,12 +9,12 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
         'isResultsMode': isResultsMode,
         'translate': [75, 372],
         'mapScale': 660,
-        'bounds': [[-100, -300], [475, 475]],
+        'bounds': [[-300, -400], [775, 575]],
         'pulloutShetland': true,
         'repIreland': true,
         'locator': true,
         'tooltip': true,
-        'interactive': (parentWidth > 700)
+        'interactive': (parentWidth > 500)
     };
 
     var Router = Backbone.Router.extend({
@@ -33,14 +33,14 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
             case 'england':
                 nationInfo = {
                     'scale': 1.55,
-                    'center': [220, 257],
+                    'center': [277, 207],
                     'pulloutShetland': false
                 };
                 break;
             case 'northernIreland':
                 nationInfo = {
-                    'scale': 5.5,
-                    'center': [110, 180],
+                    'scale': 4.48,
+                    'center': [121, 106],
                     'pulloutShetland': false
                 };
                 break;
@@ -54,7 +54,7 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
             case 'wales':
                 nationInfo = {
                     'scale': 4,
-                    'center': [181, 273],
+                    'center': [220, 233],
                     'pulloutShetland': false
                 };
                 break;

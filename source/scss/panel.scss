@@ -9,7 +9,10 @@ $panelHeight: 56px;
 	height: $panelHeight;
 	background-color: rgba(29,30,28,.85);
 	padding: 8px 0 0 10px;
-
+	-webkit-transform: translateZ(0);
+	-webkit-perspective: 1000;
+	-webkit-backface-visibility: hidden;
+	
 	.panel-title{
 		display: block;
 		font: bold 14px Arial;

@@ -46,7 +46,7 @@ define([
             this.scale = 1;
         },
         getTranslationCentroid: function () {
-            var centroid = this.mapModel.get('center');
+            var centroid = this.mapModel.get('locatorCenter');
             return [
                 ((this.mapModel.get('width') / 2) - (centroid[0])) * 0.2,
                 ((this.mapModel.get('height') / 2) - (centroid[1])) * 0.2

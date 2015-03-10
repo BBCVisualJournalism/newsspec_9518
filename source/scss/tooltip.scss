@@ -14,4 +14,8 @@
 	display: none;
 	z-index: 1000;
 	opacity: .86;
+
+	-webkit-transform: translateZ(0);
+	-webkit-perspective: 1000;
+	-webkit-backface-visibility: hidden;
 }

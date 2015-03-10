@@ -11,13 +11,19 @@ define([
             this.timeout = false;
             this.constText = '';
 
-            this.mapWidth = this.mapModel.get('width');
-            this.mapHeight = this.mapModel.get('height');
-
             news.pubsub.on('tooltip:show', this.show.bind(this));
             news.pubsub.on('tooltip:hide', this.hide.bind(this));
+
+            $(window).on('resize', _.debounce(this.setMapDimensions.bind(this), 50));
+        },
+        setMapDimensions: function () {
+            var mapEl = $('.main-map--svg');
+            this.mapWidth = mapEl.width();
+            this.mapHeight = mapEl.height();
+            console.log(this.mapWidth, this.mapHeight);
         },
         render: function () {
+            _.debounce(this.setMapDimensions.bind(this));
             return this.$el;
         },
         show: function (data) {

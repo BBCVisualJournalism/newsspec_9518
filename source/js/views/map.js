@@ -10,6 +10,7 @@ define([
             this.mapModel = options.mapModel;
             this.isInteractive = this.mapModel.get('interactive');
             this.isTouchDevice = this.isTouchDevice();
+            this.isResultsMode = this.mapModel.get('isResultsMode');
             this.features = this.mapModel.get('features');
             this.width = this.mapModel.get('width');
             this.height = this.mapModel.get('height');
@@ -161,8 +162,6 @@ define([
             
             if (scale <= this.initScale) {
                 this.toggleShetland(true);
-                this.resetSelectedConstituency();
-                news.pubsub.emit('panel:hide');
             } else {
                 this.toggleShetland(false);
             }
@@ -180,12 +179,14 @@ define([
 
                 // If already zoomed into what user clicked, zoom out.
                 if (this.currentSelectedConstituency && this.currentSelectedConstituency === d.properties.constituency_gssid) {
-                    this.currentSelectedConstituency = null;
-                    scale = this.mapModel.get('scale');
-                    centroid = this.mapModel.get('center');
-                    translation = this.getTranslationFromCentroid(centroid, scale);
-                    news.pubsub.emit('panel:hide');
-                    this.resetSelectedConstituency();
+                    if (this.isResultsMode) {
+                        this.currentSelectedConstituency = null;
+                        scale = this.mapModel.get('scale');
+                        centroid = this.mapModel.get('center');
+                        translation = this.getTranslationFromCentroid(centroid, scale);
+                        news.pubsub.emit('panel:hide');
+                        this.resetSelectedConstituency();
+                    }
                 } else {
                     var tAndS = this.getTranslationAndScaleFromFeature(d);
                     scale = tAndS.scale;
@@ -193,24 +194,22 @@ define([
                     this.currentSelectedConstituency = d.properties.constituency_gssid;
                     this.toggleShetland(false);
                     this.setSelectedConstituency(d.properties.constituency_gssid);
-
-                    setTimeout(function () {
-                        news.pubsub.emit('panel:show', {
-                            gssid: d.properties.constituency_gssid,
-                            constituency: d.properties.constituency_gssid
-                        });
-                    }, 800);
-
+                    news.pubsub.emit('panel:show', {
+                        gssid: d.properties.constituency_gssid,
+                        constituency: d.properties.constituency_gssid
+                    });
                 }
 
-                news.pubsub.emit('tooltip:hide');
-
-                this.setTranslationAndScale(translation, scale, true);
+                if (scale && translation) {
+                    news.pubsub.emit('tooltip:hide');
+                    this.setTranslationAndScale(translation, scale, true);
+                }
             }
         },
         setSelectedConstituency: function (gssid) {
             this.resetSelectedConstituency();
-            this.group.select('[data-gssid="' + gssid + '"]').attr('class', 'constituency-path constituency-path__selected');
+            var modeClass = (this.isResultsMode) ? 'constituency-path__selected--results' : 'constituency-path__selected--campaign';
+            this.group.select('[data-gssid="' + gssid + '"]').attr('class', 'constituency-path constituency-path__selected ' + modeClass);
         },
         resetSelectedConstituency: function () {
             this.$el.find('.constituency-path__selected').attr('class', 'constituency-path');
@@ -315,8 +314,11 @@ define([
                 var  centroid = this.mapModel.get('center');
                 scale = this.mapModel.get('scale');
                 translation = this.getTranslationFromCentroid(centroid, scale);
+                this.currentSelectedConstituency = null;
                 this.resetSelectedConstituency();
             }
+
+            this.toggleShetland((scale <= this.initScale));
 
             this.setTranslationAndScale(translation, scale, true);
             news.pubsub.emit('panel:hide');
@@ -368,7 +370,6 @@ define([
             if (scale > this.initScale) {
                 this.toggleShetland(false);
             } else {
-                this.resetSelectedConstituency();
                 news.pubsub.emit('panel:hide');
             }
         },
