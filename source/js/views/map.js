@@ -267,7 +267,7 @@ define([
                 shetlandsPath.on('click').call(shetlandsPath.node(), shetlandsPath.datum());
             });
 
-            this.shetlandGroup.attr('transform', 'translate(-224, 337)');
+            this.shetlandGroup.attr('transform', 'translate(-210, 300)scale(0.9)');
 
             this.shetlandPullout
                 .on('mousemove', (!this.isTouchDevice) ? this.mouseOverPath.bind(null, this, shetlandsPath.datum()) : null)
@@ -352,8 +352,6 @@ define([
                 this.currentSelectedConstituency = null;
                 this.resetSelectedConstituency();
             }
-
-            this.toggleShetland((scale <= this.initScale));
 
             this.setTranslationAndScale(translation, scale, true);
             news.pubsub.emit('panel:hide');

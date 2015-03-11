@@ -54,7 +54,12 @@ if (scaffoldLite) {
             var config = {
                     urlArgs: "v=<%= version %>",
                     baseUrl: "<%= pathStatic %>/<%= language %>/js/",
-                    waitSeconds: 20
+                    waitSeconds: 20,
+                    text: { 
+                        useXhr: function (url, protocol, hostname, port) { 
+                            return true;
+                        } 
+                    }
                 },
                 moduleToStartApp = '<%= pathStatic %>/<%= language %>/js/all-<%= language %>-'+browserType+'.js';
 

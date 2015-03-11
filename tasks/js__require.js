@@ -10,6 +10,7 @@ module.exports = function (grunt) {
         'backbone': './lib/vendors/backbone/backbone',
         'underscore': './lib/vendors/backbone/underscore',
         'text': './lib/vendors/require/text',
+        'dataJson': 'empty:',
         'd3': 'empty:'
     };
 

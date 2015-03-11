@@ -3,18 +3,20 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
     var isResultsMode = (iframeManager.getValueFromQueryString('isResultsMode').toLowerCase() === 'true'),
         parentWidth = iframeManager.getValueFromQueryString('parentWidth');
 
+
+
     mapTopoJson = JSON.parse(mapTopoJson);
 
     var mapConfig = {
         'isResultsMode': isResultsMode,
-        'translate': [75, 372],
-        'mapScale': 660,
+        'translate': [365, 2377],
+        'mapScale': 1993,
         'bounds': [[-300, -400], [775, 575]],
         'pulloutShetland': true,
         'repIreland': true,
         'locator': true,
         'tooltip': true,
-        'interactive': (parentWidth > 500)
+        'interactive': (parentWidth > 700)
     };
 
     var Router = Backbone.Router.extend({
