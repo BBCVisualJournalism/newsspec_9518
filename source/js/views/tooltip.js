@@ -20,7 +20,6 @@ define([
             var mapEl = $('.main-map--svg');
             this.mapWidth = mapEl.width();
             this.mapHeight = mapEl.height();
-            console.log(this.mapWidth, this.mapHeight);
         },
         render: function () {
             _.debounce(this.setMapDimensions.bind(this));

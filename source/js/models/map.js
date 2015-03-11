@@ -11,6 +11,7 @@ define([
             'translate': [140, 150],
             'scale': 1,
             'maxScaleOut': 1,
+            'maxScaleIn': 40,
             'center': [230, 107],
             'locatorCenter': [230, 107]
         }

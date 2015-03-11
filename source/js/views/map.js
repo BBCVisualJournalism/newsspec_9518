@@ -42,7 +42,7 @@ define([
 
             if (this.isInteractive) {
                 this.zoom = d3.behavior.zoom()
-                    .scaleExtent([this.mapModel.get('maxScaleOut'), 200])
+                    .scaleExtent([this.mapModel.get('maxScaleOut'), this.mapModel.get('maxScaleIn')])
                   .on('zoom', this.zoomHandler.bind(this));
             } else {
                 this.$el.addClass('non-interactive');
@@ -124,6 +124,9 @@ define([
             }
 
             if (translation && scale) {
+                var boundedValues = this.applyScaleBounds(translation, scale, scale);
+                translation = boundedValues.translation;
+                scale = boundedValues.scale;
                 this.setTranslationAndScale(translation, scale);
             }
         },
@@ -156,7 +159,7 @@ define([
         zoomHandler: function () {
             this.isPanningOrZoom = true;
             var scale = d3.event.scale,
-                translation = this.applyBounds(d3.event.translate, scale);
+                translation = this.applyTranslationBounds(d3.event.translate, scale);
             
             this.setTranslationAndScale(translation, scale);
             
@@ -198,6 +201,10 @@ define([
                         gssid: d.properties.constituency_gssid,
                         constituency: d.properties.constituency_gssid
                     });
+
+                    var boundedValues = this.applyScaleBounds(translation, scale, scale);
+                    translation = boundedValues.translation;
+                    scale = boundedValues.scale;
                 }
 
                 if (scale && translation) {
@@ -293,10 +300,38 @@ define([
             news.pubsub.emit('map:zoom-box', [zoomBox, this.scale, animate]);
         },
         /* Ensures a translation doesn't take the map out of the specified bounds */
-        applyBounds: function (translation, scale) {
+        applyTranslationBounds: function (translation, scale) {
             translation[0] = Math.min(-this.bounds[0][0] * scale, Math.max(-this.bounds[1][0] * scale + this.width, translation[0]));
             translation[1] = Math.min(-this.bounds[0][1] * scale, Math.max(-this.bounds[1][1] * scale + this.height, translation[1]));
             return translation;
+        },
+        applyScaleBounds: function (translation, scale, previousScale) {
+            var maxScaleOut = this.mapModel.get('maxScaleOut'),
+                maxScaleIn = this.mapModel.get('maxScaleIn'),
+                center = [this.width / 2, this.height / 2],
+                scaleFactor = scale / previousScale;
+
+            if (scale < maxScaleOut || scale > maxScaleIn) {
+                scale = (scale < maxScaleOut) ? maxScaleOut : maxScaleIn;
+                scaleFactor = scale / previousScale;
+            }
+
+            translation[0] = (translation[0] - center[0]) * scaleFactor + center[0];
+            translation[1] = (translation[1] - center[1]) * scaleFactor + center[1];
+
+            return {
+                translation: translation,
+                scale: scale
+            };
+        },
+        applyScaleAndTranslationBounds: function (translation, scale, previousScale) {
+            var scaleBounded = this.applyScaleBounds(scale, translation, this.scale),
+                boundedTanslation = this.applyTranslationBounds(scaleBounded.translation, scaleBounded.scale);
+
+            return {
+                translation: boundedTanslation,
+                scale: scaleBounded.scale
+            };
         },
         reset: function () {
             var gssid = this.mapModel.get('gssid'),
@@ -339,11 +374,10 @@ define([
                 translation[1] -= this.height / 3;
                 break;
             }
-            this.setTranslationAndScale(this.applyBounds(translation, this.scale), this.scale, true);
+            this.setTranslationAndScale(this.applyTranslationBounds(translation, this.scale), this.scale, true);
         },
         zoomClicked: function (direction) {
             var translation = this.translation,
-                center = [this.width / 2, this.height / 2],
                 scaleFactor;
 
             switch (direction) {
@@ -354,23 +388,14 @@ define([
                 scaleFactor = 1 / 2.2;
                 break;
             }
+           
+            var scale = this.scale * scaleFactor,
+                boundedValues = this.applyScaleAndTranslationBounds(scale, translation, this.scale);
 
-            var maxScale = this.mapModel.get('maxScaleOut'),
-                scale = this.scale * scaleFactor;
+            this.setTranslationAndScale(boundedValues.translation, boundedValues.scale, true);
 
-            if (scale < maxScale) {
-                scale = maxScale;
-                scaleFactor = scale / this.scale;
-            }
-
-            translation[0] = (translation[0] - center[0]) * scaleFactor + center[0];
-            translation[1] = (translation[1] - center[1]) * scaleFactor + center[1];
-
-            this.setTranslationAndScale(this.applyBounds(translation, scale), scale, true);
             if (scale > this.initScale) {
                 this.toggleShetland(false);
-            } else {
-                news.pubsub.emit('panel:hide');
             }
         },
         mouseOverPath: function (map, d) {
