@@ -197,10 +197,7 @@ define([
                     this.currentSelectedConstituency = d.properties.constituency_gssid;
                     this.toggleShetland(false);
                     this.setSelectedConstituency(d.properties.constituency_gssid);
-                    news.pubsub.emit('panel:show', {
-                        gssid: d.properties.constituency_gssid,
-                        constituency: d.properties.constituency_gssid
-                    });
+                    news.pubsub.emit('panel:show', d.properties.constituency_gssid);
 
                     var boundedValues = this.applyScaleBounds(translation, scale, scale);
                     translation = boundedValues.translation;

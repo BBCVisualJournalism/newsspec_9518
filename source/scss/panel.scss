@@ -1,14 +1,13 @@
-$panelHeight: 56px;
+$panelOffset: 100px;
 
 .map-panel{
 	position: absolute;
-	bottom: -($panelHeight);
-	transition: bottom 0.8s;
+	bottom: -($panelOffset);
+	transition: bottom 0.9s;
 	left: 0;
 	right: 0;
-	height: $panelHeight;
 	background-color: rgba(29,30,28,.85);
-	padding: 8px 0 0 10px;
+	padding: 8px 0 11px 10px;
 	-webkit-transform: translateZ(0);
 	-webkit-perspective: 1000;
 	-webkit-backface-visibility: hidden;

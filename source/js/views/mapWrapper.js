@@ -32,7 +32,7 @@ define([
             return new ControlsView().render();
         },
         getPanel: function () {
-            return new PanelView().render();
+            return new PanelView({mapModel: this.mapModel}).render();
         },
         getTooltip: function () {
             return new TooltipView({mapModel: this.mapModel}).render();

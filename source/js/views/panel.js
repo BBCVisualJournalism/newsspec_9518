@@ -4,9 +4,11 @@ define([
 ], function (news, Backbone) {
     return Backbone.View.extend({
         className: 'map-panel',
-        initialize: function () {
+        initialize: function (options) {
             this.template = _.template($('#panel_template').html(), {});
             this.visible = false;
+
+            this.dataFeed = options.mapModel.get('dataFeed');
 
             news.pubsub.on('panel:show', this.show.bind(this));
             news.pubsub.on('panel:hide', this.hide.bind(this));
@@ -19,23 +21,24 @@ define([
 
             return this.$el;
         },
-        show: function (options) {
-            this.constituencyName.text(options.constituency);
-            this.constituencyLink.attr('href', this.urlFormat.replace('{GSSID}', options.gssid));
-            
-            if (!this.visible) {
-                this.visible = true;
+        show: function (gssid) {
+            var constituencyData = this.dataFeed.get(gssid);
+            if (constituencyData) {
+                this.constituencyName.text(constituencyData.name);
+                this.constituencyLink.attr('href', this.urlFormat.replace('{GSSID}', gssid));
+                
+                if (!this.visible) {
+                    this.visible = true;
 
-                this.$el.css('bottom', 0);
+                    this.$el.css('bottom', 0);
+                }
             }
         },
         hide: function () {
             if (this.visible) {
                 this.visible = false;
 
-                var height = this.$el.css('height');
-                this.$el.css('bottom', '-' + height);
-
+                this.$el.css('bottom', '-100px');
             }
         }
     });

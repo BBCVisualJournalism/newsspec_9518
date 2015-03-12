@@ -1,6 +1,7 @@
 define([
-    'backbone'
-], function (Backbone) {
+    'backbone',
+    'models/dataFeed.js'
+], function (Backbone, DataFeed) {
     return Backbone.Model.extend({
         defaults: {
             'width': 480,
@@ -14,6 +15,9 @@ define([
             'maxScaleIn': 40,
             'center': [230, 107],
             'locatorCenter': [230, 107]
+        },
+        initialize: function () {
+            this.set('dataFeed', new DataFeed({mapModel: this}));
         }
     });
 });

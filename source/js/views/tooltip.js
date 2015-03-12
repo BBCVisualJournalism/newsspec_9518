@@ -11,6 +11,8 @@ define([
             this.timeout = false;
             this.constText = '';
 
+            this.dataFeed = this.mapModel.get('dataFeed');
+
             news.pubsub.on('tooltip:show', this.show.bind(this));
             news.pubsub.on('tooltip:hide', this.hide.bind(this));
 
@@ -26,8 +28,9 @@ define([
             return this.$el;
         },
         show: function (data) {
-            if (!this.timeout) {
-                var constText = data.properties.constituency_gssid;
+            var constituencyData = this.dataFeed.get(data.properties.constituency_gssid);
+            if (!this.timeout && constituencyData) {
+                var constText = constituencyData.name;
                 if (this.constText !== constText) {
                     this.$el.text(constText);
                     this.elWidth = this.$el.width();
