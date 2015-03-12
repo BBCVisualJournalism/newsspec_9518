@@ -13,7 +13,6 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
         'mapScale': 1993,
         'bounds': [[-300, -400], [775, 575]],
         'pulloutShetland': true,
-        'repIreland': true,
         'locator': true,
         'tooltip': true,
         'interactive': (parentWidth > 700)

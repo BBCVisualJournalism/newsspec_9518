@@ -8,15 +8,15 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
 
     var mapConfig = {
         'isResultsMode': isResultsMode,
-        'translate': [350, 2388],
-        'mapScale': 1993,
-        'maxScaleOut': 4,
-        'bounds': [[125, 156], [269, 316]],
+        'translate': [800, 8852],
+        'mapScale': 7972,
+        'maxScaleOut': 1,
+        'bounds': [[-85, -84], [580, 550]],
         'pulloutShetland': false,
-        'repIreland': false,
-        'locator': false,
-        'scale': 4,
-        'center': [205, 236],
+        'locator': true,
+        'scale': 1,
+        'center': [250, 250],
+        'locatorCenter': [250, 250],
         'tooltip': true,
         'interactive': (parentWidth > 700)
     };
