@@ -12,6 +12,7 @@ define([
 
             news.pubsub.on('panel:show', this.show.bind(this));
             news.pubsub.on('panel:hide', this.hide.bind(this));
+
         },
         render: function () {
             this.$el.html(this.template);
@@ -19,13 +20,15 @@ define([
             this.constituencyName = this.constituencyLink.find('.panel-title__constituency');
             this.urlFormat = this.constituencyLink.data('url');
 
+            this.constituencyLink.on('click', this.click.bind(this));
+
             return this.$el;
         },
         show: function (gssid) {
             var constituencyData = this.dataFeed.get(gssid);
             if (constituencyData) {
                 this.constituencyName.text(constituencyData.name);
-                this.constituencyLink.attr('href', this.urlFormat.replace('{GSSID}', gssid));
+                this.gssid = gssid;
                 
                 if (!this.visible) {
                     this.visible = true;
@@ -40,6 +43,11 @@ define([
 
                 this.$el.css('bottom', '-100px');
             }
+        },
+        click: function () {
+            news.pubsub.emit('istats', ['clickthrough', 'election-map', this.gssid]);
+            top.location.href = this.urlFormat.replace('{GSSID}', this.gssid);
+            return false;
         }
     });
 });

@@ -90,4 +90,5 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
     Backbone.history.start();
 
     news.sendMessageToremoveLoadingImage();
+
 });

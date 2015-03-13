@@ -14,6 +14,7 @@ define([
             this.features = this.mapModel.get('features');
             this.width = this.mapModel.get('width');
             this.height = this.mapModel.get('height');
+            this.iStatsSent = [];
             
             this.d3El = d3.select(this.el);
 
@@ -174,6 +175,12 @@ define([
             this.panningTimeout = setTimeout(function () {
                 _this.isPanningOrZoom = false;
             }.bind(this), 250);
+
+            if (this.zoomInit) {
+                this.sendStats('scroll');
+            } else {
+                this.zoomInit = true;
+            }
         },
         handleConstituencyClick: function (d, node) {
             if (!this.isPanningOrZoom && d.properties.constituency_gssid) {
@@ -202,6 +209,7 @@ define([
                     var boundedValues = this.applyScaleBounds(translation, scale, scale);
                     translation = boundedValues.translation;
                     scale = boundedValues.scale;
+                    this.sendStats('click');
                 }
 
                 if (scale && translation) {
@@ -409,6 +417,12 @@ define([
         },
         isTouchDevice: function () {
             return (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch);
+        },
+        sendStats: function (type) {
+            if (_.indexOf(this.iStatsSent, type) === -1) {
+                this.iStatsSent.push(type);
+                news.pubsub.emit('istats', [type, 'election-map']);
+            }
         }
     });
 });
