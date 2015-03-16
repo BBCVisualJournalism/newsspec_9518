@@ -9,7 +9,7 @@ module.exports = function (grunt) {
         'pubsub': './lib/vendors/jquery/pubsub',
         'backbone': './lib/vendors/backbone/backbone',
         'underscore': './lib/vendors/backbone/underscore',
-        'text': './lib/vendors/require/text',
+        //'text': './lib/vendors/require/text',
         'dataJson': 'empty:',
         'd3': 'empty:'
     };

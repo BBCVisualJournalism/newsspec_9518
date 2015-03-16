@@ -11,6 +11,8 @@ define([
             this.isInteractive = this.mapModel.get('interactive');
             this.isTouchDevice = this.isTouchDevice();
             this.isResultsMode = this.mapModel.get('isResultsMode');
+            this.dataFeed = this.mapModel.get('dataFeed');
+            this.partyColours = this.mapModel.get('partyColours');
             this.features = this.mapModel.get('features');
             this.width = this.mapModel.get('width');
             this.height = this.mapModel.get('height');
@@ -59,6 +61,7 @@ define([
 
         },
         render: function () {
+            var _this = this;
             this.group
                 .selectAll('path')
                 .data(this.features)
@@ -67,6 +70,15 @@ define([
                     return (d.properties.constituency_gssid) ? 'constituency-path' : 'outline-path';
                 })
                 .attr('data-gssid', this.getDataGssIdFrom)
+                .style('fill', function (d) {
+                    if (_this.isResultsMode) {
+                        var constituencyInfo = _this.dataFeed.get(d.properties.constituency_gssid);
+                        if (constituencyInfo && constituencyInfo.winningPartyCode) {
+                            return _this.partyColours.get(constituencyInfo.winningPartyCode);
+                        }
+                    }
+                    return null;
+                })
                 .attr('d', this.path)
                 .on('mousemove', (!this.isTouchDevice) ? this.mouseOverPath.bind(null, this) : null)
                 .on('mouseout', (!this.isTouchDevice) ? this.mouseOutPath.bind(null, this) : null)
@@ -236,8 +248,10 @@ define([
             }
         },
         pulloutShetland: function () {
-            var width = (this.width / 5) + 5,
-                height = width * 1.875;
+            var shetlandGssid = 'S14000051',
+                width = (this.width / 5) + 5,
+                height = width * 1.875,
+                _this = this;
 
             this.shetlandPullout = this.svg.append('svg')
                 .attr({
@@ -258,14 +272,23 @@ define([
                     'height': height - 4
                 });
 
-            var shetlandsPath = this.group.select('[data-gssid="S14000051"]');
+            var shetlandsPath = this.group.select('[data-gssid="' + shetlandGssid + '"]');
 
             this.shetlandGroup = this.shetlandPullout.append('g');
 
             this.shetlandGroup.append('path')
                 .attr('class', 'constituency-path')
-                .attr('data-gssid', 'S14000051')
-                .attr('d', shetlandsPath.attr('d'));
+                .attr('data-gssid', shetlandGssid)
+                .attr('d', shetlandsPath.attr('d'))
+                .style('fill', function () {
+                    if (_this.isResultsMode) {
+                        var shetlandInfo = _this.dataFeed.get(shetlandGssid);
+                        if (shetlandInfo && shetlandInfo.winningPartyCode) {
+                            return _this.partyColours.get(shetlandInfo.winningPartyCode);
+                        }
+                    }
+                    return null;
+                });
                 
 
             this.shetlandPullout.on('click', function () {

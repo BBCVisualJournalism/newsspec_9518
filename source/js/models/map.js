@@ -1,9 +1,11 @@
 define([
     'backbone',
-    'models/dataFeed.js'
-], function (Backbone, DataFeed) {
+    'models/dataFeed',
+    'models/partyColours'
+], function (Backbone, DataFeed, PartyColours) {
     return Backbone.Model.extend({
         defaults: {
+            'isResultsMode': true,
             'width': 480,
             'height': 538,
             'locator': true,
@@ -18,6 +20,9 @@ define([
         },
         initialize: function () {
             this.set('dataFeed', new DataFeed({mapModel: this}));
+            if (this.get('isResultsMode'))  {
+                this.set('partyColours', new PartyColours());
+            }
         }
     });
 });

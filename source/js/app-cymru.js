@@ -1,12 +1,10 @@
-define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', 'lib/vendors/d3/topojson', 'backbone', 'models/map', 'views/mapWrapper', 'text!maps/wales.topojson'], function (news, iframeManager, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson) {
-    
+define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', 'lib/vendors/d3/topojson', 'backbone', 'models/map', 'views/mapWrapper', 'data/wales.topojson'], function (news, iframeManager, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson) {
     /* Values passed from parent on load. (Query string) */
     var isResultsMode = (iframeManager.getValueFromQueryString('isResultsMode').toLowerCase() === 'true'),
         parentWidth = iframeManager.getValueFromQueryString('parentWidth');
 
-    mapTopoJson = JSON.parse(mapTopoJson);
-
     var mapConfig = {
+        'language': 'cymru',
         'isResultsMode': isResultsMode,
         'translate': [800, 8852],
         'mapScale': 7972,
@@ -45,15 +43,16 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
         },
         addMapWrapper: function (config) {
             var container = news.$('.main'),
-                mapModel = new MapModel(config),
-                mapWrapper = new MapWrapper({mapModel: mapModel});
+                mapModel = new MapModel(config);
 
-            container.html(mapWrapper.render());
+            news.pubsub.on('map:fetchedData', function () {
+                var mapWrapper = new MapWrapper({mapModel: mapModel});
+                news.sendMessageToremoveLoadingImage();
+                container.html(mapWrapper.render());
+            });
         }
     });
 
-    var appRouter = new Router();
+    new Router();
     Backbone.history.start();
-
-    news.sendMessageToremoveLoadingImage();
 });
