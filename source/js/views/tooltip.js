@@ -8,10 +8,9 @@ define([
         initialize: function (options) {
             this.mapModel = options.mapModel;
             this.visible = false;
-            this.timeout = false;
             this.constText = '';
 
-            this.dataFeed = this.mapModel.get('dataFeed');
+            this.constituencyNames = options.mapModel.get('constituencyNames');
 
             news.pubsub.on('tooltip:show', this.show.bind(this));
             news.pubsub.on('tooltip:hide', this.hide.bind(this));
@@ -28,14 +27,13 @@ define([
             return this.$el;
         },
         show: function (data) {
-            var constituencyData = this.dataFeed.get(data.properties.constituency_gssid);
-            if (!this.timeout && constituencyData) {
-                var constText = constituencyData.name;
-                if (this.constText !== constText) {
-                    this.$el.text(constText);
+            var constituencyName = this.constituencyNames.get(data.properties.constituency_gssid);
+            if (constituencyName) {
+                if (this.constText !== constituencyName) {
+                    this.$el.text(constituencyName);
                     this.elWidth = this.$el.width();
                     this.elHeight = this.$el.height();
-                    this.constText = constText;
+                    this.constText = constituencyName;
                 }
 
                 var mouseLeft = d3.event.pageX - news.$('.map-wrapper').offset().left,

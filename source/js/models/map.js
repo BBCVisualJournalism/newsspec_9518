@@ -1,8 +1,9 @@
 define([
+    'lib/news_special/bootstrap',
     'backbone',
     'models/dataFeed',
     'models/partyColours'
-], function (Backbone, DataFeed, PartyColours) {
+], function (news, Backbone, DataFeed, PartyColours) {
     return Backbone.Model.extend({
         defaults: {
             'isResultsMode': true,
@@ -19,9 +20,11 @@ define([
             'locatorCenter': [230, 107]
         },
         initialize: function () {
-            this.set('dataFeed', new DataFeed({mapModel: this}));
             if (this.get('isResultsMode'))  {
+                this.set('dataFeed', new DataFeed({mapModel: this}));
                 this.set('partyColours', new PartyColours());
+            } else {
+                news.pubsub.emit('map:hasRequiredData');
             }
         }
     });

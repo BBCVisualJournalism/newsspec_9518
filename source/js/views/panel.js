@@ -8,7 +8,7 @@ define([
             this.template = _.template($('#panel_template').html(), {});
             this.visible = false;
 
-            this.dataFeed = options.mapModel.get('dataFeed');
+            this.constituencyNames = options.mapModel.get('constituencyNames');
 
             news.pubsub.on('panel:show', this.show.bind(this));
             news.pubsub.on('panel:hide', this.hide.bind(this));
@@ -25,9 +25,9 @@ define([
             return this.$el;
         },
         show: function (gssid) {
-            var constituencyData = this.dataFeed.get(gssid);
-            if (constituencyData) {
-                this.constituencyName.text(constituencyData.name);
+            var constituencyName = this.constituencyNames.get(gssid);
+            if (constituencyName) {
+                this.constituencyName.text(constituencyName);
                 this.gssid = gssid;
                 
                 if (!this.visible) {
