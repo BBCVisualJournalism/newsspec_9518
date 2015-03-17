@@ -7,18 +7,18 @@ define([
             if (this.mapModel.get('language') === 'english') {
                 if (this.mapModel.get('isResultsMode')) {
                     /* ENGLISH RESULTS MODE */
-                    return 'https://api.myjson.com/bins/u70v';
+                    return 'https://api.myjson.com/bins/si2f';
                 } else {
                     /* ENGLISH CAMPAIGN MODE */
-                    return 'https://api.myjson.com/bins/u70v';
+                    return 'https://api.myjson.com/bins/si2f';
                 }
             } else {
                 if (this.mapModel.get('isResultsMode')) {
                     /* WELSH RESULTS MODE */
-                    return 'https://api.myjson.com/bins/u70v';
+                    return 'https://api.myjson.com/bins/si2f';
                 } else {
                     /* WELSH CAMPAIGN MODE */
-                    return 'https://api.myjson.com/bins/u70v';
+                    return 'https://api.myjson.com/bins/si2f';
                 }
             }
         },

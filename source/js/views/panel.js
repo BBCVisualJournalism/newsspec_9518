@@ -18,9 +18,7 @@ define([
             this.$el.html(this.template);
             this.constituencyLink = this.$el.find('.panel-title');
             this.constituencyName = this.constituencyLink.find('.panel-title__constituency');
-            this.constituencyMessage = this.$el.find('.panel-message');
             this.urlFormat = this.constituencyLink.data('url');
-            this.defaultMessage = this.constituencyMessage.data('defaultMessage');
 
             this.constituencyLink.on('click', this.click.bind(this));
 
@@ -29,9 +27,7 @@ define([
         show: function (gssid) {
             var constituencyData = this.dataFeed.get(gssid);
             if (constituencyData) {
-                var freeTextMessage = constituencyData.mapPanelMessage || this.defaultMessage;
                 this.constituencyName.text(constituencyData.name);
-                this.constituencyMessage.text(freeTextMessage);
                 this.gssid = gssid;
                 
                 if (!this.visible) {

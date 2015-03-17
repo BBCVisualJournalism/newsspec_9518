@@ -101,9 +101,13 @@ define([
 
             return this.$el;
         },
-        setTranslationAndScale: function (translation, scale, animated) {
+        setTranslationAndScale: function (translation, scale, animated, callback) {
             var group = (animated) ? this.group.transition().duration(1000) : this.group;
             group.attr('transform', 'translate(' + translation[0] + ',' + translation[1] + ') scale(' + scale + ')');
+            if (animated) {
+                group.each('end', callback);
+            }
+
             if (this.isInteractive) {
                 this.zoom.translate([translation[0], translation[1]]).scale(scale);
             }
@@ -197,43 +201,38 @@ define([
         handleConstituencyClick: function (d, node) {
             if (!this.isPanningOrZoom && d.properties.constituency_gssid) {
 
-                var scale, translation;
-
                 // If already zoomed into what user clicked, zoom out.
-                if (this.currentSelectedConstituency && this.currentSelectedConstituency === d.properties.constituency_gssid) {
-                    if (this.isResultsMode) {
-                        this.currentSelectedConstituency = null;
-                        scale = this.mapModel.get('scale');
-                        centroid = this.mapModel.get('center');
-                        translation = this.getTranslationFromCentroid(centroid, scale);
-                        news.pubsub.emit('panel:hide');
-                        this.resetSelectedConstituency();
-                    }
-                } else {
-                    var tAndS = this.getTranslationAndScaleFromFeature(d);
+                if (!this.currentSelectedConstituency || this.currentSelectedConstituency !== d.properties.constituency_gssid) {
+                    var scale, translation,
+                        tAndS = this.getTranslationAndScaleFromFeature(d);
+
                     scale = tAndS.scale;
                     translation = tAndS.translation;
                     this.currentSelectedConstituency = d.properties.constituency_gssid;
                     this.toggleShetland(false);
-                    this.setSelectedConstituency(d.properties.constituency_gssid);
                     news.pubsub.emit('panel:show', d.properties.constituency_gssid);
 
                     var boundedValues = this.applyScaleBounds(translation, scale, scale);
                     translation = boundedValues.translation;
                     scale = boundedValues.scale;
                     this.sendStats('click');
-                }
 
-                if (scale && translation) {
                     news.pubsub.emit('tooltip:hide');
                     this.setTranslationAndScale(translation, scale, true);
+                    this.setSelectedConstituency(d.properties.constituency_gssid);
                 }
             }
         },
         setSelectedConstituency: function (gssid) {
             this.resetSelectedConstituency();
             var modeClass = (this.isResultsMode) ? 'constituency-path__selected--results' : 'constituency-path__selected--campaign';
-            this.group.select('[data-gssid="' + gssid + '"]').attr('class', 'constituency-path constituency-path__selected ' + modeClass);
+            var selectedPath = $(this.group[0]).find('[data-gssid="' + gssid + '"]');
+            selectedPath.attr('class', 'constituency-path constituency-path__selected ' + modeClass);
+
+            var path = selectedPath[0],
+                parentElm = path.parentNode;
+            parentElm.removeChild(path);
+            parentElm.appendChild(path);
         },
         resetSelectedConstituency: function () {
             this.$el.find('.constituency-path__selected').attr('class', 'constituency-path');
@@ -373,6 +372,9 @@ define([
                 scale = tAndS.scale;
                 this.currentSelectedConstituency = feature.properties.constituency_gssid;
                 this.setSelectedConstituency(gssid);
+                var boundedValues = this.applyScaleBounds(translation, scale, scale);
+                translation = boundedValues.translation;
+                scale = boundedValues.scale;
             } else {
                 var  centroid = this.mapModel.get('center');
                 scale = this.mapModel.get('scale');

@@ -51,6 +51,13 @@
 		}
 		.constituency-path__selected--campaign, .constituency-path__selected--campaign:hover{
 			cursor: initial;
+			stroke-width: 0.07;
+			stroke: #505050;
+		}
+		.constituency-path__selected--results, .constituency-path__selected--results:hover{
+			cursor: initial;
+			stroke-width: 0.15;
+			stroke: #FFF;
 		}
 		.shetland--pullout{
 			-webkit-transform: translateZ(0);
