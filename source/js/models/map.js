@@ -23,8 +23,6 @@ define([
             if (this.get('isResultsMode'))  {
                 this.set('dataFeed', new DataFeed({mapModel: this}));
                 this.set('partyColours', new PartyColours());
-            } else {
-                news.pubsub.emit('map:hasRequiredData');
             }
         }
     });

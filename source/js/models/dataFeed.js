@@ -7,7 +7,7 @@ define([
             if (this.mapModel.get('language') === 'english') {
                 /* ENGLISH RESULTS MODE */
                 return 'https://api.myjson.com/bins/si2f';
-             } else {
+            } else {
                  /* WELSH RESULTS MODE */
                 return 'https://api.myjson.com/bins/si2f';
             }
