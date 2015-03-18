@@ -1,6 +1,5 @@
 .map-tooltip {
 	pointer-events: none;
-	min-width: 120px;
 	max-width: 200px;
 	min-height: 14px;
 	position: absolute;
@@ -14,6 +13,7 @@
 	display: none;
 	z-index: 1000;
 	opacity: .86;
+	word-wrap: break-word;
 
 	-webkit-transform: translateZ(0);
 	-webkit-perspective: 1000;

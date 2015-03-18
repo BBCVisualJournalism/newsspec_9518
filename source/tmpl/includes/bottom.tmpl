@@ -70,8 +70,7 @@ if (scaffoldLite) {
                 config.paths.app    = './app-<%= language %>';
                 moduleToStartApp    = '<%= pathStatic %>/<%= language %>/js/app.js';
             }
-            config.paths = config.paths || {};
-            config.paths.d3 = 'lib/vendors/d3/d3.min';
+            
             return {
                 requireConfig: config,
                 moduleToStartApp: moduleToStartApp

@@ -6,10 +6,10 @@ define([
         url: function () {
             if (this.mapModel.get('language') === 'english') {
                 /* ENGLISH RESULTS MODE */
-                return 'https://api.myjson.com/bins/si2f';
+                return '';
             } else {
                  /* WELSH RESULTS MODE */
-                return 'https://api.myjson.com/bins/si2f';
+                return '';
             }
         },
         initialize: function (options) {

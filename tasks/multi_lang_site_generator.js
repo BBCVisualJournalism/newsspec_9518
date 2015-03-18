@@ -10,7 +10,8 @@ module.exports = function (grunt) {
         'map_campaign.inc':  'map_campaign.inc.tmpl',
         'map_results.inc':  'map_results.inc.tmpl',
         'test_campaign.html':  'test_campaign.html.tmpl',
-        'test_results.html':  'test_results.html.tmpl'
+        'test_results.html':  'test_results.html.tmpl',
+        'failover.inc':  'failover.inc.tmpl'
     };
 
     // *************************************************************************

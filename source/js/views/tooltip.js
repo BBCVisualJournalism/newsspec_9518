@@ -21,6 +21,8 @@ define([
             var mapEl = $('.main-map--svg');
             this.mapWidth = mapEl.width();
             this.mapHeight = mapEl.height();
+            this.$el.css('maxWidth', this.mapWidth / 2);
+
         },
         render: function () {
             _.debounce(this.setMapDimensions.bind(this));
