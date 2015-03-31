@@ -25,7 +25,7 @@ define([
 
         },
         render: function () {
-            _.debounce(this.setMapDimensions.bind(this));
+            _.defer(this.setMapDimensions.bind(this));
             return this.$el;
         },
         show: function (data) {

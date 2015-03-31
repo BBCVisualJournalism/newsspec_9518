@@ -149,13 +149,15 @@ define([
         },
         getFeatureFromGssid: function (gssid) {
             var returnFeature = null;
-            _.every(this.features, function (feature) {
-                if (feature.properties.constituency_gssid === gssid) {
-                    returnFeature = feature;
-                    return false;
+            for (var prop in this.features) {
+                if (this.features.hasOwnProperty(prop)) {
+                    var feature = this.features[prop];
+                    if (feature.properties.constituency_gssid === gssid) {
+                        returnFeature = feature;
+                        break;
+                    }
                 }
-                return true;
-            });
+            }
             return returnFeature;
         },
         getTranslationAndScaleFromFeature: function (feature) {
@@ -204,7 +206,8 @@ define([
                 // If already zoomed into what user clicked, zoom out.
                 if (!this.currentSelectedConstituency || this.currentSelectedConstituency !== d.properties.constituency_gssid) {
                     var scale, translation,
-                        tAndS = this.getTranslationAndScaleFromFeature(d);
+                        tAndS = this.getTranslationAndScaleFromFeature(d),
+                        boundedValues;
 
                     scale = tAndS.scale;
                     translation = tAndS.translation;
@@ -212,7 +215,7 @@ define([
                     this.toggleShetland(false);
                     news.pubsub.emit('panel:show', d.properties.constituency_gssid);
 
-                    var boundedValues = this.applyScaleBounds(translation, scale, scale);
+                    boundedValues = this.applyScaleBounds(translation, scale, scale);
                     translation = boundedValues.translation;
                     scale = boundedValues.scale;
                     this.sendStats('click');
@@ -248,6 +251,7 @@ define([
         },
         pulloutShetland: function () {
             var shetlandGssid = 'S14000051',
+                shetlandsPath = this.group.select('[data-gssid="' + shetlandGssid + '"]'),
                 width = (this.width / 5) + 5,
                 height = width * 1.875,
                 _this = this;
@@ -270,8 +274,6 @@ define([
                     'width': width - 4,
                     'height': height - 4
                 });
-
-            var shetlandsPath = this.group.select('[data-gssid="' + shetlandGssid + '"]');
 
             this.shetlandGroup = this.shetlandPullout.append('g');
 

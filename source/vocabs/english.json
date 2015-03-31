@@ -7,5 +7,6 @@
     "controls_right": "Right",
     "": "West",
     "panel_default_message": "Find out who is standing in this constituency",
+    "panel_results_default_message": "Not yet declared",
     "panel_url": "/news/politics/constituencies/{GSSID}"
 }

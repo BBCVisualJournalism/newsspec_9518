@@ -1,4 +1,14 @@
-define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', 'lib/vendors/d3/topojson', 'backbone', 'models/map', 'views/mapWrapper', 'data/uk.topojson', 'data/constituencyNamesEnglish.json.js', 'models/constituencyNames'], function (news, iframeManager, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson, constituencyNames, ConstituencyNamesModel) {
+define([
+    'lib/news_special/bootstrap',
+    'lib/news_special/iframemanager__frame',
+    'lib/vendors/d3/topojson',
+    'backbone',
+    'models/map',
+    'views/mapWrapper',
+    'data/uk.topojson',
+    'data/constituencyNamesEnglish.json.js',
+    'models/constituencyNames'
+], function (news, iframeManager, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson, constituencyNames, ConstituencyNamesModel) {
     /* Values passed from parent on load. (Query string) */
     var isResultsMode = (iframeManager.getValueFromQueryString('isResultsMode').toLowerCase() === 'true'),
         parentWidth = iframeManager.getValueFromQueryString('parentWidth');
@@ -27,35 +37,30 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
         },
         nation: function (nation) {
             var nationInfo;
-            switch (nation) {
-            case 'england':
+            if (nation === 'england') {
                 nationInfo = {
                     'scale': 1.55,
                     'center': [277, 207],
                     'pulloutShetland': false
                 };
-                break;
-            case 'northernIreland':
+            } else if (nation === 'northernIreland') {
                 nationInfo = {
                     'scale': 4.48,
                     'center': [121, 106],
                     'pulloutShetland': false
                 };
-                break;
-            case 'scotland':
+            } else if (nation === 'scotland') {
                 nationInfo = {
                     'scale': 1.2,
                     'center': [180, 30],
                     'pulloutShetland': false
                 };
-                break;
-            case 'wales':
+            } else if (nation === 'wales') {
                 nationInfo = {
                     'scale': 4,
                     'center': [220, 233],
                     'pulloutShetland': false
                 };
-                break;
             }
 
             this.loadMap(_.extend(mapConfig, nationInfo));
@@ -79,7 +84,7 @@ define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', '
                 mapModel = new MapModel(config);
 
             mapModel.set('constituencyNames', new ConstituencyNamesModel(constituencyNames));
-
+            
             function renderMap() {
                 var mapWrapper = new MapWrapper({mapModel: mapModel});
                 news.sendMessageToremoveLoadingImage();

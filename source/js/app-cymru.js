@@ -1,4 +1,14 @@
-define(['lib/news_special/bootstrap', 'lib/news_special/iframemanager__frame', 'lib/vendors/d3/topojson', 'backbone', 'models/map', 'views/mapWrapper', 'data/wales.topojson', 'data/constituencyNamesWelsh.json.js', 'models/constituencyNames'], function (news, iframeManager, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson, constituencyNames, ConstituencyNamesModel) {
+define([
+    'lib/news_special/bootstrap',
+    'lib/news_special/iframemanager__frame',
+    'lib/vendors/d3/topojson',
+    'backbone',
+    'models/map',
+    'views/mapWrapper',
+    'data/wales.topojson',
+    'data/constituencyNamesWelsh.json.js',
+    'models/constituencyNames'
+], function (news, iframeManager, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson, constituencyNames, ConstituencyNamesModel) {
     /* Values passed from parent on load. (Query string) */
     var isResultsMode = (iframeManager.getValueFromQueryString('isResultsMode').toLowerCase() === 'true'),
         parentWidth = iframeManager.getValueFromQueryString('parentWidth');

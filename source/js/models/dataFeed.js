@@ -6,11 +6,16 @@ define([
         url: function () {
             if (this.mapModel.get('language') === 'english') {
                 /* ENGLISH RESULTS MODE */
-                return '';
+                //return 'http://m.int.bbc.co.uk/news/components?batch%5Bremote-portlet-content-only%5D%5Bopts%5D%5Bid%5D=general_election_data/map_data';
+                return 'https://api.myjson.com/bins/35j6f';
             } else {
                  /* WELSH RESULTS MODE */
-                return '';
+                //return 'http://m.int.bbc.co.uk/news/components?batch%5Bremote-portlet-content-only%5D%5Bopts%5D%5Bid%5D=general_election_data/map_data';
+                return 'https://api.myjson.com/bins/35j6f';
             }
+        },
+        parse: function (response) {
+            return JSON.parse(response['general_election_data-map_data']);
         },
         initialize: function (options) {
             var _this = this;

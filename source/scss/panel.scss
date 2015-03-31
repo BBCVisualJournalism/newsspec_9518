@@ -32,4 +32,18 @@ $panelOffset: 100px;
 		font: 14px Arial;
 		color: #FFF;
 	}
+
+	.panel-result{
+		display: none;
+		margin-top: 5px;
+		font: 14px Arial;
+		color: #FFF;
+
+		.panel-result--party-colour{
+			display: inline-block;
+			width: 17px;
+			height: 12px;
+			margin-right: 6px;
+		}
+	}
 }

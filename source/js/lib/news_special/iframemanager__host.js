@@ -48,7 +48,7 @@
                 route         = this.getQueryStringValue('route'),
                 qsRouteHash   = (route) ? '#' + route : null,
                 urlParams     = qsRouteHash || window.location.hash || '',
-                hostUrl       = encodeURI(window.location.href.replace(urlParams, '')),
+                hostUrl       = encodeURIComponent(window.location.href.replace(urlParams, '')),
                 onBBC         = this.onBbcDomain(),
                 viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
                 container     = document.getElementById('<%= iframeUid %>-container');
