@@ -7,11 +7,13 @@ define([
             if (this.mapModel.get('language') === 'english') {
                 /* ENGLISH RESULTS MODE */
                 //return 'http://m.int.bbc.co.uk/news/components?batch%5Bremote-portlet-content-only%5D%5Bopts%5D%5Bid%5D=general_election_data/map_data';
-                return 'https://api.myjson.com/bins/35j6f';
+                // return 'https://api.myjson.com/bins/35j6f';
+                return 'https://api.myjson.com/bins/53fdr';
             } else {
                  /* WELSH RESULTS MODE */
                 //return 'http://m.int.bbc.co.uk/news/components?batch%5Bremote-portlet-content-only%5D%5Bopts%5D%5Bid%5D=general_election_data/map_data';
-                return 'https://api.myjson.com/bins/35j6f';
+                // return 'https://api.myjson.com/bins/35j6f';
+                return 'https://api.myjson.com/bins/53fdr';
             }
         },
         parse: function (response) {

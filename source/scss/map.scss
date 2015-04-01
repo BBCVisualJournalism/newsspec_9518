@@ -43,7 +43,7 @@
 			fill: #fff;
 			fill-opacity: .5;
 		}
-		.constituency-path:hover{
+		.constituency-path__campaign:hover{
 			fill: #e3e9f1;
 		}
 		.constituency-path__selected, .constituency-path__selected:hover{
@@ -57,7 +57,11 @@
 		.constituency-path__selected--results, .constituency-path__selected--results:hover{
 			cursor: initial;
 			stroke-width: 0.15;
-			stroke: #FFF;
+			stroke: #dcdcdc;
+		}
+		.constituency-path__selected--results__no-result, .constituency-path__selected--results__no-result:hover{
+			stroke: #505050;
+			stroke-width: 0.07;
 		}
 		.shetland--pullout{
 			-webkit-transform: translateZ(0);

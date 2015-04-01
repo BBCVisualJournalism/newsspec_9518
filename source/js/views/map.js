@@ -67,7 +67,7 @@ define([
                 .data(this.features)
                 .enter().append('path')
                 .attr('class', function (d) {
-                    return (d.properties.constituency_gssid) ? 'constituency-path' : 'outline-path';
+                    return (d.properties.constituency_gssid) ? 'constituency-path constituency-path__' + ((_this.isResultsMode) ? 'results' : 'campaign') : 'outline-path';
                 })
                 .attr('data-gssid', this.getDataGssIdFrom)
                 .style('fill', function (d) {
@@ -228,12 +228,18 @@ define([
         },
         setSelectedConstituency: function (gssid) {
             this.resetSelectedConstituency();
-            var modeClass = (this.isResultsMode) ? 'constituency-path__selected--results' : 'constituency-path__selected--campaign';
-            var selectedPath = $(this.group[0]).find('[data-gssid="' + gssid + '"]');
-            selectedPath.attr('class', 'constituency-path constituency-path__selected ' + modeClass);
+            var selectedPath = $(this.group[0]).find('[data-gssid="' + gssid + '"]'),
+                path = selectedPath[0],
+                parentElm = path.parentNode,
+                modeClass = 'constituency-path__selected--campaign';
 
-            var path = selectedPath[0],
-                parentElm = path.parentNode;
+            if (this.isResultsMode) {
+                var hasResults = (this.dataFeed.get(gssid).winningPartyCode) ? 'has-results' : 'no-result';
+                modeClass = 'constituency-path__selected--results constituency-path__selected--results__' + hasResults;
+            }
+            
+            selectedPath.attr('class', 'constituency-path constituency-path__' + ((this.isResultsMode) ? 'results' : 'campaign') + ' constituency-path__selected ' + modeClass);
+
             parentElm.removeChild(path);
             parentElm.appendChild(path);
         },
@@ -278,7 +284,7 @@ define([
             this.shetlandGroup = this.shetlandPullout.append('g');
 
             this.shetlandGroup.append('path')
-                .attr('class', 'constituency-path')
+                .attr('class', 'constituency-path constituency-path__' + ((this.isResultsMode) ? 'results' : 'campaign'))
                 .attr('data-gssid', shetlandGssid)
                 .attr('d', shetlandsPath.attr('d'))
                 .style('fill', function () {
