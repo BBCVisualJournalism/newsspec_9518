@@ -46,19 +46,19 @@ define([
             } else if (nation === 'northernIreland') {
                 nationInfo = {
                     'scale': 4.48,
-                    'center': [121, 106],
+                    'center': [130, 92],
                     'pulloutShetland': false
                 };
             } else if (nation === 'scotland') {
                 nationInfo = {
                     'scale': 1.2,
-                    'center': [180, 30],
+                    'center': [237, -87],
                     'pulloutShetland': false
                 };
             } else if (nation === 'wales') {
                 nationInfo = {
                     'scale': 4,
-                    'center': [220, 233],
+                    'center': [235, 225],
                     'pulloutShetland': false
                 };
             }

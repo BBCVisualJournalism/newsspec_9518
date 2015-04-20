@@ -244,7 +244,7 @@ define([
             parentElm.appendChild(path);
         },
         resetSelectedConstituency: function () {
-            this.$el.find('.constituency-path__selected').attr('class', 'constituency-path');
+            this.$el.find('.constituency-path__selected').attr('class', 'constituency-path constituency-path__' + ((this.isResultsMode) ? 'results' : 'campaign'));
         },
         getDataGssIdFrom: function (feature) {
             return feature.properties.constituency_gssid ? feature.properties.constituency_gssid : 'outline';

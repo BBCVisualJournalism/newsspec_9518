@@ -77,7 +77,7 @@
                 iframeWatcher.setDimensions();
             });
 
-            this.removeAppWebViewLinksFromHostPage();
+            //this.removeAppWebViewLinksFromHostPage();
             this.removeFallbackImageFromHostPage();
         },
 

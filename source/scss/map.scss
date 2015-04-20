@@ -1,7 +1,9 @@
 .map-wrapper{
 	position: relative;
 	overflow: hidden;
-	border: 1px solid #ededed;
+	max-width: 600px;
+	border: 0;
+	margin: auto;
 	-webkit-transform: translateZ(0);
 	-webkit-perspective: 1000;
 	-webkit-backface-visibility: hidden;

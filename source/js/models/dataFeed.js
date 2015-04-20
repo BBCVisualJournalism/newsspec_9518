@@ -6,14 +6,10 @@ define([
         url: function () {
             if (this.mapModel.get('language') === 'english') {
                 /* ENGLISH RESULTS MODE */
-                //return 'http://m.int.bbc.co.uk/news/components?batch%5Bremote-portlet-content-only%5D%5Bopts%5D%5Bid%5D=general_election_data/map_data';
-                // return 'https://api.myjson.com/bins/35j6f';
-                return 'https://api.myjson.com/bins/53fdr';
+                return 'http://www.stage.bbc.co.uk/news/components?allowcors=true&batch[remote-portlet-content-only][opts][id]=general_election_data/map_data';
             } else {
                  /* WELSH RESULTS MODE */
-                //return 'http://m.int.bbc.co.uk/news/components?batch%5Bremote-portlet-content-only%5D%5Bopts%5D%5Bid%5D=general_election_data/map_data';
-                // return 'https://api.myjson.com/bins/35j6f';
-                return 'https://api.myjson.com/bins/53fdr';
+                return 'http://www.stage.bbc.co.uk/news/components?allowcors=true&batch[remote-portlet-content-only][opts][id]=general_election_data/map_data';
             }
         },
         parse: function (response) {
