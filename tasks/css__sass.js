@@ -8,7 +8,7 @@ module.exports = function (grunt) {
         },
         inline: {
             options: {
-                sourcemap: 'none'
+                 "sourcemap=none": ''
             },
             files: {
                 './content/<%= config.services.default %>/css/inline.css': './source/scss/news_special/inline.scss'

@@ -10,6 +10,7 @@ define([
             this.dataFeed = this.mapModel.get('dataFeed');
             this.partyColours = this.mapModel.get('partyColours');
             this.template = _.template($('#tooltip_template').html(), {});
+            this.isResultsMode = this.mapModel.get('isResultsMode');
 
             this.visible = false;
             this.constText = '';
@@ -39,7 +40,7 @@ define([
         },
         show: function (data) {
             var constituencyName = this.constituencyNames.get(data.properties.constituency_gssid),
-            constData = this.dataFeed.get(data.properties.constituency_gssid);
+            constData = (this.isResultsMode) ? this.dataFeed.get(data.properties.constituency_gssid) : false;
             if (constituencyName) {
                 if (this.constText !== constituencyName) {
                     this.constituencyNameEl.text(constituencyName);
