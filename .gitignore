@@ -6,3 +6,6 @@ node_modules
 tmp
 content
 npm-debug.log
+*.swp
+*.swo
+*~
