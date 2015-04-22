@@ -7,6 +7,10 @@ define([
         className: 'map-tooltip',
         initialize: function (options) {
             this.mapModel = options.mapModel;
+            this.dataFeed = this.mapModel.get('dataFeed');
+            this.partyColours = this.mapModel.get('partyColours');
+            this.template = _.template($('#tooltip_template').html(), {});
+
             this.visible = false;
             this.constText = '';
 
@@ -25,14 +29,27 @@ define([
 
         },
         render: function () {
+            this.$el.html(this.template);
+            this.constituencyNameEl = this.$el.find('.tooltip--constituency-name');
+            this.statusEl = this.$el.find('.tooltip-status');
+            this.partyColorEl = this.statusEl.find('.party-colour');
+            this.constStatusEl = this.statusEl.find('.status-text');
             _.defer(this.setMapDimensions.bind(this));
             return this.$el;
         },
         show: function (data) {
-            var constituencyName = this.constituencyNames.get(data.properties.constituency_gssid);
+            var constituencyName = this.constituencyNames.get(data.properties.constituency_gssid),
+            constData = this.dataFeed.get(data.properties.constituency_gssid);
             if (constituencyName) {
                 if (this.constText !== constituencyName) {
-                    this.$el.text(constituencyName);
+                    this.constituencyNameEl.text(constituencyName);
+                    if (constData && constData.winningPartyCode && constData.constituencyDeclarationString) {
+                        this.statusEl.show();
+                        this.partyColorEl.css('backgroundColor', this.partyColours.get(constData.winningPartyCode));
+                        this.constStatusEl.text(constData.constituencyDeclarationString);
+                    } else {
+                        this.statusEl.hide();
+                    }
                     this.elWidth = this.$el.width();
                     this.elHeight = this.$el.height();
                     this.constText = constituencyName;

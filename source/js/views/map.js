@@ -98,7 +98,6 @@ define([
 
             this.loadLocator();
             this.positionMap();
-
             return this.$el;
         },
         setTranslationAndScale: function (translation, scale, animated, callback) {

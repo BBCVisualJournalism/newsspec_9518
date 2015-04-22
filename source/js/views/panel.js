@@ -34,13 +34,13 @@ define([
         updateResults: function (gssid) {
             if (this.mapModel.get('isResultsMode')) {
                 var constituencyData = this.dataFeed.get(gssid);
-                if (constituencyData.winningPartyCode && constituencyData.constituencyDeclarationString) {
+                if (constituencyData && constituencyData.winningPartyCode && constituencyData.constituencyDeclarationString) {
                     this.resultPartyColour.css('backgroundColor', this.partyColours.get(constituencyData.winningPartyCode));
                     this.resultDeclareString.text(constituencyData.constituencyDeclarationString);
 
                     this.panelMessage.hide();
                     this.resultContainer.show();
-                } else if (constituencyData.mapPanelMessage) {
+                } else if (constituencyData && constituencyData.mapPanelMessage) {
                     this.panelMessage.text(constituencyData.mapPanelMessage);
 
                     this.panelMessage.show();

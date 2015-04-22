@@ -1,9 +1,7 @@
 .map-wrapper{
 	position: relative;
 	overflow: hidden;
-	max-width: 600px;
-	border: 0;
-	margin: auto;
+	border: 1px solid #bfbfbf;
 	-webkit-transform: translateZ(0);
 	-webkit-perspective: 1000;
 	-webkit-backface-visibility: hidden;
@@ -25,7 +23,7 @@
 	.main-map--svg{
 		display: inline-block;
 		position: absolute;
-		background-color: #bacbdc;
+		background-color: #cfdfec;
 		top: 0;
 		left: 0;
 		-webkit-transform: translateZ(0);
@@ -59,7 +57,7 @@
 		.constituency-path__selected--results, .constituency-path__selected--results:hover{
 			cursor: initial;
 			stroke-width: 0.15;
-			stroke: #dcdcdc;
+			stroke: #fff;
 		}
 		.constituency-path__selected--results__no-result, .constituency-path__selected--results__no-result:hover{
 			stroke: #505050;
@@ -72,7 +70,7 @@
 			.shetland-pullout--box{
 				stroke: #333;
 				stroke-width: 1;
-				fill: #bacbdc;
+				fill: #cfdfec;
 			}
 		}
 		.shetland--pullout:hover{
