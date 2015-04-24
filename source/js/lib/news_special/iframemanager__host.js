@@ -55,6 +55,8 @@
             
             this.staticHeight = 600;
             this.addLoadingSpinner(container, linkId);
+            this.container = container;
+            this.uid = this.getPath(href);
 
             this.elm = document.createElement('iframe');
             this.elm.className = 'responsive-iframe';
@@ -76,9 +78,32 @@
                 iframeWatcher.getAnyInstructionsFromIframe();
                 iframeWatcher.setDimensions();
             });
+            
+            this.waitForMessageToLoadMap();
+        },
 
-            //this.removeAppWebViewLinksFromHostPage();
-            this.removeFallbackImageFromHostPage();
+        waitForMessageToLoadMap: function () {
+            var self = this;
+            if (false && this.onBbcDomain()) {
+                require(['jquery'], function ($) {
+                    $.on('results-page:animation-finished', function () {
+                        self.sendMessageToLoadMap(self);
+                    });
+                });
+            } else {
+                self.sendMessageToLoadMap(self);
+            }
+        
+        },
+
+        sendMessageToLoadMap: function (self) {
+            self.mapInitInterval = setInterval(function () {
+                console.log('Sending message');
+                var message = {
+                    appShouldInit: true
+                };
+                self.container.querySelector('iframe').contentWindow.postMessage(self.uid + '::' + JSON.stringify(message), '*');
+            }, 100);
         },
 
         addLoadingSpinner: function (container, iframeUID) {
@@ -134,6 +159,7 @@
                     this.getObjectNotationFromDataString(data)
                 );
                 this.processIStatsInstructions(this.data);
+                this.processAppInitInstuctions(this.data);
             }
         },
 
@@ -250,6 +276,12 @@
 
         istatsQueue: [],
 
+        processAppInitInstuctions: function (data) {
+            if (data.appInited && this.mapInitInterval) {
+                clearInterval(this.mapInitInterval);
+            }
+        },
+        
         processIStatsInstructions: function (data) {
             if (this.istatsInTheData(data)) {
                 this.addToIstatsQueue(data);

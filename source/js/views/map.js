@@ -233,7 +233,8 @@ define([
                 modeClass = 'constituency-path__selected--campaign';
 
             if (this.isResultsMode) {
-                var hasResults = (this.dataFeed.get(gssid).winningPartyCode) ? 'has-results' : 'no-result';
+                var constData = this.dataFeed.get(gssid),
+                    hasResults = (constData && constData.winningPartyCode) ? 'has-results' : 'no-result';
                 modeClass = 'constituency-path__selected--results constituency-path__selected--results__' + hasResults;
             }
             

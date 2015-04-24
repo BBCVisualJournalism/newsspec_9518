@@ -12,6 +12,15 @@ define(['jquery'], function ($) {
                 externalHostCommunicator.setHeight();
                 externalHostCommunicator.registerIstatsCall(actionType, actionName, viewLabel);
             });
+            $.on('app:inititalised', function () {
+                var talker_uid = window.location.pathname,
+                message = {
+                    appInited: true,
+                    hostPageCallback: null
+                };
+                window.parent.postMessage(talker_uid + '::' + JSON.stringify(message), '*');
+    
+            });
         },
         height: 0,
         registerIstatsCall: function (actionType, actionName, viewLabel) {
@@ -28,7 +37,24 @@ define(['jquery'], function ($) {
             }
         },
         setupPostMessage: function () {
+            self = this;
+
             window.setInterval(this.sendDataByPostMessage, 32);
+        
+            window.addEventListener('message', function (message) {
+                var data = self.getObjectNotationFromDataString(message.data);
+
+                if (data.appShouldInit) {
+                    $.emit('app:should:init');
+                }
+
+            }, false);
+        },
+        getObjectNotationFromDataString: function (data) {
+            if (data.indexOf('::') > -1) {
+                return JSON.parse(data.split('::')[1]);
+            }
+            return false;
         },
         sendDataByPostMessage: function (istatsData) {
             var talker_uid = window.location.pathname,

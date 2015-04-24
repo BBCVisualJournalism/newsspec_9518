@@ -100,7 +100,16 @@ define([
         }
     });
 
-    new Router();
-    Backbone.history.start();
+    var initialize = _.once(function () {
+        new Router();
+        Backbone.history.start();
+        news.pubsub.emit('app:inititalised');
+    });
 
+    if (isResultsMode) {
+        news.pubsub.on('app:should:init', initialize);
+        setTimeout(initialize, 10000);
+    } else {
+        initialize();
+    }
 });
