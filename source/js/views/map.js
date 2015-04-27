@@ -74,7 +74,7 @@ define([
                     if (_this.isResultsMode) {
                         var constituencyInfo = _this.dataFeed.get(d.properties.constituency_gssid);
                         if (constituencyInfo && constituencyInfo.winningPartyCode) {
-                            return _this.partyColours.get(constituencyInfo.winningPartyCode);
+                            return _this.partyColours.get(constituencyInfo.winningPartyCode) || _this.partyColours.get('OTH');
                         }
                     }
                     return null;

@@ -85,7 +85,7 @@
         waitForMessageToLoadMap: function () {
             var self = this;
             if (this.onBbcDomain()) {
-                require(['jquery'], function ($) {
+                require(['jquery', 'vendor/events/pubsub'], function ($) {
                     $.on('results-page:animation-finished', function () {
                         self.sendMessageToLoadMap(self);
                     });

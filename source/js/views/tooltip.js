@@ -46,7 +46,8 @@ define([
                     this.constituencyNameEl.text(constituencyName);
                     if (constData && constData.winningPartyCode && constData.constituencyDeclarationString) {
                         this.statusEl.show();
-                        this.partyColorEl.css('backgroundColor', this.partyColours.get(constData.winningPartyCode));
+                        var partyColour = this.partyColours.get(constData.winningPartyCode) || this.partyColours.get('OTH');
+                        this.partyColorEl.css('backgroundColor', partyColour);
                         this.constStatusEl.text(constData.constituencyDeclarationString);
                     } else {
                         this.statusEl.hide();
