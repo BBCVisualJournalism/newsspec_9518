@@ -84,7 +84,7 @@
 
         waitForMessageToLoadMap: function () {
             var self = this;
-            if (false && this.onBbcDomain()) {
+            if (this.onBbcDomain()) {
                 require(['jquery'], function ($) {
                     $.on('results-page:animation-finished', function () {
                         self.sendMessageToLoadMap(self);
@@ -98,7 +98,7 @@
 
         sendMessageToLoadMap: function (self) {
             self.mapInitInterval = setInterval(function () {
-                console.log('Sending message');
+                //console.log('Sending message');
                 var message = {
                     appShouldInit: true
                 };

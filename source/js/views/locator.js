@@ -19,31 +19,30 @@ define([
             news.pubsub.on('map:zoom-box', this.zoomBoxUpdate.bind(this));
         },
         initMap: function () {
-            var translate = this.mapModel.get('translate');
-            translate[0] *= 0.2;
-            translate[1] *= 0.2;
-
-            this.projection = d3.geo.mercator()
-                .scale(this.mapModel.get('mapScale') * 0.2)
-                .translate(translate);
-
-            this.path = d3.geo.path()
-                .projection(this.projection);
-
-            this.translation = this.getTranslationCentroid();
-
             this.svg = d3.select(this.el)
                 .append('svg')
                 .attr('class', 'locator-map--svg')
                 .attr('preserveAspectRatio', 'xMinYMin meet')
                 .attr('viewBox', '0 0 ' + this.width  + ' ' + this.height);
-
-            this.group = this.svg.append('g')
-                .attr('transform', 'translate(' + this.translation[0] + ',' + this.translation[1] + ')');
+            
+            this.translation = this.getTranslationCentroid();
+            this.scale = 1;
+        },
+        render: function () {
+            var locatorImage = (this.mapModel.get('language') === 'english') ? 'img/ukminimap.png' : 'img/walesminimap.png';
+            this.svg
+                .append('image')
+                .attr({
+                    'x': 0,
+                    'y': 0,
+                    'width': this.width,
+                    'height': this.height,
+                    'xlink:href': locatorImage
+                });
 
             this.addLocatorBox();
-
-            this.scale = 1;
+            
+            return this.$el;
         },
         getTranslationCentroid: function () {
             var centroid = this.mapModel.get('locatorCenter');
@@ -51,16 +50,6 @@ define([
                 ((this.mapModel.get('width') / 2) - (centroid[0])) * 0.2,
                 ((this.mapModel.get('height') / 2) - (centroid[1])) * 0.2
             ];
-        },
-        render: function () {
-            this.group
-                .selectAll('path')
-                .data(this.features)
-                .enter().append('path')
-                .attr('class', 'constituency-path')
-                .attr('d', this.path);
-
-            return this.$el;
         },
         addLocatorBox: function () {
             this.svg.append('rect')
