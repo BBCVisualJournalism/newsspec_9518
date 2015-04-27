@@ -35,7 +35,8 @@ define([
             if (this.mapModel.get('isResultsMode')) {
                 var constituencyData = this.dataFeed.get(gssid);
                 if (constituencyData && constituencyData.winningPartyCode && constituencyData.constituencyDeclarationString) {
-                    this.resultPartyColour.css('backgroundColor', this.partyColours.get(constituencyData.winningPartyCode));
+                    var partyColour = this.partyColours.get(constituencyData.winningPartyCode) || this.partyColours.get('OTH');
+                    this.resultPartyColour.css('backgroundColor', partyColour);
                     this.resultDeclareString.text(constituencyData.constituencyDeclarationString);
 
                     this.panelMessage.hide();
