@@ -4,7 +4,7 @@ define(function(){
         "APNI": "#CDAF2D",
         "BNP": "#9094C8",
         "CPA": "#CC3399",
-        "CON:": "#0575C9",
+        "CON": "#0575C9",
         "SPE": "#0575C9",
         "DUP": "#C0153D",
         "ED": "#B20A06",

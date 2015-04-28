@@ -4,6 +4,7 @@
 	-webkit-transform: translateZ(0);
 	-webkit-perspective: 1000;
 	-webkit-backface-visibility: hidden;
+	border: 1px solid #bfbfbf;
 }
 
 .main-map--container{
@@ -11,7 +12,7 @@
 	position: relative;
 	height: 0;
 	width: 100%;
-	padding-bottom: 112.5%;
+	padding-bottom: 111.3%;
 	vertical-align: middle;
 	-webkit-tap-highlight-color: rgba(0,0,0,0); 
 	overflow: hidden;
@@ -23,7 +24,6 @@
 		display: inline-block;
 		position: absolute;
 		background-color: #cfdfec;
-	    border: 1px solid #bfbfbf;
 		top: 0;
 		left: 0;
 		-webkit-transform: translateZ(0);
@@ -57,7 +57,7 @@
 		.constituency-path__selected--results, .constituency-path__selected--results:hover{
 			cursor: initial;
 			stroke-width: 0.15;
-			stroke: #fff;
+			stroke: #505050;
 		}
 		.constituency-path__selected--results__no-result, .constituency-path__selected--results__no-result:hover{
 			stroke: #505050;

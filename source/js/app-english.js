@@ -108,7 +108,7 @@ define([
 
     if (isResultsMode) {
         news.pubsub.on('app:should:init', initialize);
-        setTimeout(initialize, 10000);
+        setTimeout(initialize, 7000);
     } else {
         initialize();
     }
