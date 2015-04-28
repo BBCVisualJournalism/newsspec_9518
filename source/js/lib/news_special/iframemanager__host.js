@@ -46,7 +46,7 @@
                 iframeWatcher = this,
                 hostId        = this.getWindowLocationOrigin(),
                 route         = this.getQueryStringValue('route'),
-                delayLoading  = (!this.getQueryStringValue('delayLoading')) ? true : false,
+                delayLoading  = (this.getQueryStringValue('delayLoading')) ? true : false,
                 qsRouteHash   = (route) ? '#' + route : null,
                 urlParams     = qsRouteHash || window.location.hash || '',
                 hostUrl       = encodeURIComponent(window.location.href.replace(urlParams, '')),
@@ -101,7 +101,6 @@
 
         sendMessageToLoadMap: function (self) {
             self.mapInitInterval = setInterval(function () {
-                //console.log('Sending message');
                 var message = {
                     appShouldInit: true
                 };
