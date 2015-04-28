@@ -46,6 +46,7 @@
                 iframeWatcher = this,
                 hostId        = this.getWindowLocationOrigin(),
                 route         = this.getQueryStringValue('route'),
+                delayLoading  = (!this.getQueryStringValue('delayLoading')) ? true : false,
                 qsRouteHash   = (route) ? '#' + route : null,
                 urlParams     = qsRouteHash || window.location.hash || '',
                 hostUrl       = encodeURIComponent(window.location.href.replace(urlParams, '')),
@@ -67,7 +68,7 @@
 
             this.decideHowToTalkToIframe(href);
 
-            this.elm.src = href + '&hostid=' + hostId.split('//')[1] + '&hostUrl=' + hostUrl + '&iframeUID=' + linkId + '&parentWidth=' + viewportWidth + '&onbbcdomain=' + onBBC + urlParams;
+            this.elm.src = href + '&hostid=' + hostId.split('//')[1] + '&hostUrl=' + hostUrl + '&iframeUID=' + linkId + '&delayLoading=' + delayLoading.toString() + '&parentWidth=' + viewportWidth + '&onbbcdomain=' + onBBC + urlParams;
 
             container.appendChild(this.elm);
 
@@ -78,8 +79,10 @@
                 iframeWatcher.getAnyInstructionsFromIframe();
                 iframeWatcher.setDimensions();
             });
-            
-            this.waitForMessageToLoadMap();
+
+            if (delayLoading) {
+                this.waitForMessageToLoadMap();
+            }
         },
 
         waitForMessageToLoadMap: function () {

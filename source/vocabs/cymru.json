@@ -7,6 +7,6 @@
     "controls_right": "Dde",
     "": "Gorllewin",
     "panel_default_message": "Pwy sy`n sefyll yn yr etholaeth hon",
-    "panel_results_default_message": "",
+    "panel_results_default_message": "Disgwyl canlyniadau",
     "panel_url": "/cymrufyw/gwleidyddiaeth/etholaethau/{GSSID}"
 }
