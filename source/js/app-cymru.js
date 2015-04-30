@@ -11,7 +11,10 @@ define([
 ], function (news, iframeManager, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson, constituencyNames, ConstituencyNamesModel) {
     /* Values passed from parent on load. (Query string) */
     var isResultsMode = (iframeManager.getValueFromQueryString('isResultsMode').toLowerCase() === 'true'),
-        parentWidth = iframeManager.getValueFromQueryString('parentWidth');
+        parentWidth = iframeManager.getValueFromQueryString('parentWidth'),
+        delayLoadingQS = iframeManager.getValueFromQueryString('delayLoading'),
+        delayLoading = (delayLoadingQS === true || delayLoadingQS === 'true');
+
 
     var mapConfig = {
         'language': 'cymru',
@@ -78,9 +81,9 @@ define([
         news.pubsub.emit('app:inititalised');
     });
 
-    if (isResultsMode) {
+    if (delayLoading) {
         news.pubsub.on('app:should:init', initialize);
-        setTimeout(initialize, 10000);
+        setTimeout(initialize, 7000);
     } else {
         initialize();
     }
