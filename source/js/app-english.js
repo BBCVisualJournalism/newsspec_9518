@@ -54,8 +54,9 @@ define([
             } else if (nation === 'scotland') {
                 nationInfo = {
                     'scale': 1.2,
-                    'center': [237, -87],
-                    'pulloutShetland': false
+                    'center': [217, -101],
+                    'pulloutShetland': false,
+                    'locator': false
                 };
             } else if (nation === 'wales') {
                 nationInfo = {
