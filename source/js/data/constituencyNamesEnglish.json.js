@@ -514,7 +514,7 @@ define(function(){
 		"E14000937": "Cambridgeshire South East",
 		"E14000938": "Cornwall South East",
 		"E14000939": "South Holland & The Deepings",
-		"E14000940": "Leicester South",
+		"E14000940": "Leicestershire South",
 		"E14000941": "Norfolk South",
 		"E14000942": "Northamptonshire South",
 		"E14000943": "South Ribble",
