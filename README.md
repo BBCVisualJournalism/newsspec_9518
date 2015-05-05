@@ -6,6 +6,17 @@
 
 Set up the project
 
+###Update your env.json
+You must update your env.json to match the values below. This is so that the the datafeed is pulled in without getting CORs errors.
+```
+"stage": {
+    "mount":        "/Volumes/wwwlive",
+    "domain":       "http://pal.stage.bbc.co.uk",
+    "domainStatic": "http://www.stage.bbc.co.uk"
+},
+```
+
+
 ```
 grunt
 ```
