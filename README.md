@@ -15,6 +15,12 @@ Set up the project
 ###Update your env.json
 You must update your env.json to match the values below. This is so that the the datafeed is pulled in without getting CORs errors.
 ```
+"local": {
+    "domain":       "http://www.local.bbc.co.uk",
+    "domainStatic": "http://static.local.bbc.co.uk:1033",
+    "pal": "http://www.bbc.co.uk"
+},
+
 "stage": {
     "mount":        "/Volumes/wwwlive",
     "domain":       "http://pal.stage.bbc.co.uk",
@@ -24,7 +30,7 @@ You must update your env.json to match the values below. This is so that the the
 
 
 ```
-grunt
+grunt 
 ```
 
 Make images responsive
