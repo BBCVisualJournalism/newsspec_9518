@@ -30,6 +30,11 @@ You must update your env.json to match the values below. This is so that the the
 ##Local URL after changes
 http://www.local.bbc.co.uk/news/special/2015/newsspec_9518/content/english/test_results.html
 
+##Data feed
+http://www.bbc.co.uk/news/components?allowcors=true&batch%5Bremote-portlet-content-only%5D%5Bopts%5D%5Bid%5D=general_election_data/uk_data
+
+##Building the project
+
 ```
 grunt translate
 grunt images
