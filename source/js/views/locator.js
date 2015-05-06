@@ -29,7 +29,7 @@ define([
             this.scale = 1;
         },
         render: function () {
-            var locatorImage = (this.mapModel.get('language') === 'english') ? 'img/ukminimap.png' : 'img/walesminimap.png';
+            var locatorImage = (this.mapModel.get('language') === 'english') ? 'http://news.bbcimg.co.uk/news/special/2015/newsspec_9518/content/english/img/ukminimap.png' : 'http://news.bbcimg.co.uk/news/special/2015/newsspec_9518/content/english/img/walesminimap.png';
             this.svg
                 .append('image')
                 .attr({
