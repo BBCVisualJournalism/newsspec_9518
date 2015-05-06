@@ -23,7 +23,7 @@ module.exports = function (grunt) {
         _ = require('lodash-node'),
         localConfig = _.merge({
             options: {
-                port: 1031
+                port: 80
             }
         }, defaultConfig),
         localStaticConfig = _.merge({

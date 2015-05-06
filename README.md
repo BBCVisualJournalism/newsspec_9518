@@ -2,6 +2,12 @@
 
 2015 Electiosn results map
 
+##Starting the server
+This project needs to be ran over port 80, which is restricted to root. So you have to kill your current node server, cd into this project and run 
+```
+sudo grunt connect
+```
+
 ## Getting started
 
 Set up the project
