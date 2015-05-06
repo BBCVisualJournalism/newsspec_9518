@@ -11,7 +11,6 @@ sudo grunt connect
 ## Getting started
 
 Set up the project
-
 ###Update your env.json
 You must update your env.json to match the values below. This is so that the the datafeed is pulled in without getting CORs errors.
 ```
@@ -28,9 +27,12 @@ You must update your env.json to match the values below. This is so that the the
 },
 ```
 
+##Local URL after changes
+http://www.local.bbc.co.uk/news/special/2015/newsspec_9518/content/english/test_results.html
 
 ```
-grunt 
+grunt translate
+grunt images
 ```
 
 Make images responsive
