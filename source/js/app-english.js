@@ -11,7 +11,7 @@ define([
 ], function (news, iframeManager, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson, constituencyNames, ConstituencyNamesModel) {
     /* Values passed from parent on load. (Query string) */
     var isResultsMode = (iframeManager.getValueFromQueryString('isResultsMode').toLowerCase() === 'true'),
-        parentWidth = iframeManager.getValueFromQueryString('parentWidth'),
+        parentWidth = window.parent.document.body.clientWidth,
         delayLoadingQS = iframeManager.getValueFromQueryString('delayLoading'),
         delayLoading = (delayLoadingQS === true || delayLoadingQS === 'true');
 
