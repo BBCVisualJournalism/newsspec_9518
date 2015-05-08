@@ -67,6 +67,8 @@ define([
 
                     this.$el.css('bottom', 0);
                 }
+
+                this.$el.find('.panel-title')[0].href =  '/news/politics/constituencies/' + gssid;
             }
         },
         hide: function () {
