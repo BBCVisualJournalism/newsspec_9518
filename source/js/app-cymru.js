@@ -37,7 +37,10 @@ define([
             '*default': 'welshMap'
         },
 
-        welshMap: function (parentWidth) {
+        welshMap: function (routeParam) {
+            var routeValues = routeParam.split('/'),
+                parentWidth = routeValues[routeValues.length - 1];
+
             this.loadMap(mapConfig, parentWidth);
         },
         constituency: function (constituency, parentWidth) {
