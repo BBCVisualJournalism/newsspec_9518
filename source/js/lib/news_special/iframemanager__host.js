@@ -48,11 +48,14 @@
                 route         = this.getQueryStringValue('route'),
                 delayLoading  = (this.getQueryStringValue('delayLoading')) ? true : false,
                 qsRouteHash   = (route) ? '#' + route : null,
-                urlParams     = qsRouteHash || window.location.hash || '',
+                urlParams     = qsRouteHash || window.location.hash || '#',
                 hostUrl       = encodeURIComponent(window.location.href.replace(urlParams, '')),
                 onBBC         = this.onBbcDomain(),
+                viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
                 container     = document.getElementById('<%= iframeUid %>-container');
-            
+  
+            urlParams += '/' + viewportWidth;
+
             this.staticHeight = 600;
             this.addLoadingSpinner(container, linkId);
             this.container = container;

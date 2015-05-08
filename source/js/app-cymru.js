@@ -28,29 +28,29 @@ define([
         'scale': 1,
         'center': [250, 250],
         'locatorCenter': [250, 250],
-        'tooltip': true,
-        'interactive': (parentWidth > 700)
+        'tooltip': true
     };
 
     var Router = Backbone.Router.extend({
         routes: {
-            'constituency/:gssid': 'constituency',
+            'constituency/:gssid/:parentWidth': 'constituency',
             '*default': 'welshMap'
         },
 
-        welshMap: function () {
-            this.loadMap(mapConfig);
+        welshMap: function (parentWidth) {
+            this.loadMap(mapConfig, parentWidth);
         },
-        constituency: function (constituency) {
+        constituency: function (constituency, parentWidth) {
             var constituencyInfo = {
                 'gssid': constituency
             };
 
-            this.loadMap(_.extend(mapConfig, constituencyInfo));
+            this.loadMap(_.extend(mapConfig, constituencyInfo), parentWidth);
         },
-        loadMap: function (config) {
+        loadMap: function (config, parentWidth) {
             var features = Topojson.feature(mapTopoJson, mapTopoJson.objects['boundaries']).features;
             config.features = features;
+            config.interactive =  (parentWidth > 700);
 
             this.addMapWrapper(config);
         },
