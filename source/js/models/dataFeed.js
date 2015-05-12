@@ -6,19 +6,11 @@ define([
         url: function () {
             if (this.mapModel.get('language') === 'english') {
                 /* ENGLISH RESULTS MODE */
-                return 'http://www.bbc.co.uk/news/components?allowcors=true&batch%5Bremote-portlet-content-only%5D%5Bopts%5D%5Bid%5D=general_election_data/uk_data';
+                return 'http://www.bbc.co.uk/news/special/2015/newsspec_9518/content/english/results_data.json';
             } else {
                  /* WELSH RESULTS MODE */
-                return 'http://www.bbc.co.uk/news/components?allowcors=true&batch%5Bremote-portlet-content-only%5D%5Bopts%5D%5Bid%5D=general_election_data/wales_data';
+                return 'http://www.bbc.co.uk/news/special/2015/newsspec_9518/content/cymru/results_data.json';
             }
-        },
-        parse: function (response) {
-            if (this.mapModel.get('language') === 'english') {
-                return (response['general_election_data-uk_data']) ? JSON.parse(response['general_election_data-uk_data']) : null;
-            } else {
-                return (response['general_election_data-wales_data']) ? JSON.parse(response['general_election_data-wales_data']) : null;
-            }
-
         },
         initialize: function (options) {
             var _this = this;
