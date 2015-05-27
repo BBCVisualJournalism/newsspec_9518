@@ -6,7 +6,7 @@ define([
     'models/map',
     'views/mapWrapper',
     'data/wales.topojson',
-    'data/constituencyNamesWelsh.json.js',
+    'data/constituencyNamesWelsh.json',
     'models/constituencyNames'
 ], function (news, iframeManager, Topojson, Backbone, MapModel, MapWrapper, mapTopoJson, constituencyNames, ConstituencyNamesModel) {
     /* Values passed from parent on load. (Query string) */
