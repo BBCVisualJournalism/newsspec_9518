@@ -63,6 +63,10 @@ module.exports = function (grunt) {
         applicationJS = ['requirejs:lite'];
     }
 
+    if (grunt.config.get('config').debug === 'true') {
+        applicationJS = [];
+    }
+
     grunt.config(['concurrent', 'js'], {
         tasks: ['jshint'].concat(applicationJS)
     });
