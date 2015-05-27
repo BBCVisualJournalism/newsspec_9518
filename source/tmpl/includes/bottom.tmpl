@@ -28,7 +28,9 @@ if (scaffoldLite) {
                     done = true;
                     require.config(settings.requireConfig);
                     require([settings.moduleToStartApp], function () {
-                        require(['app-<%= language %>'], function (app) {});
+                        if (!debugMode) {
+                            require(['app-<%= language %>'], function (app) {});
+                        }
                     });
                 }
             }
