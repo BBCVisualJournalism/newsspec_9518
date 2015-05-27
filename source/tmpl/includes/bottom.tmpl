@@ -64,11 +64,13 @@ if (scaffoldLite) {
                 moduleToStartApp = '<%= pathStatic %>/<%= language %>/js/all-<%= language %>-'+browserType+'.js';
 
             if (debug) {
+                console.log('Got here');
                 var jqueryVersion   = (browserType === 'html5') ? 'jquery-2.0.3' : 'jquery-1.9.1';
                 config.paths        = <%= amdModulePaths %>;
                 config.paths.jquery = './lib/vendors/jquery/' + jqueryVersion;
-                config.paths.app    = './app-<%= language %>';
-                moduleToStartApp    = '<%= pathStatic %>/<%= language %>/js/app.js';
+                config.paths['app-<%= language %>']    = './app-<%= language %>';
+                moduleToStartApp    = '<%= pathStatic %>/<%= language %>/js/app-<%= language %>.js';
+                console.log(config);
             }
             
             return {
