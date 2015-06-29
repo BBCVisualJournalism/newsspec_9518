@@ -6,10 +6,10 @@ define([
         url: function () {
             if (this.mapModel.get('language') === 'english') {
                 /* ENGLISH RESULTS MODE */
-                return 'http://www.bbc.co.uk/news/special/2015/newsspec_9518/content/english/results_data.json';
+                return 'http://www.stage.bbc.co.uk/news/special/2015/newsspec_9518/content/english/results_data.json';
             } else {
                  /* WELSH RESULTS MODE */
-                return 'http://www.bbc.co.uk/news/special/2015/newsspec_9518/content/cymru/results_data.json';
+                return 'http://www.stage.bbc.co.uk/news/special/2015/newsspec_9518/content/cymru/results_data.json';
             }
         },
         initialize: function (options) {
